@@ -1,0 +1,97 @@
+@import url(./header.css);
+@import url(./footer.css);
+@import url(./content.css);
+@import url(./productitem.css);
+@import url(./banner.css);
+@import url(./button.css);
+@import url(./productdetail.css);
+@import url(./cart.css);
+@import url(./input.css);
+@import url(./table.css);
+@import url(./pay.css);
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  --primary-color: #8bbdcf;
+  --sub-color: #ee4d2d;
+  --bg1: #f8f8f8;
+  text-decoration: none !important;
+  letter-spacing: 0.5px;
+}
+a{
+  color: #2c3e50;
+}
+.m-r-8{
+  margin-right: 8px;
+}
+.m-t-16 {
+  margin-top: 16px;
+}
+.m-t-0{
+  margin-top: 0;
+}
+.m-t-20{
+  margin-top: 20px;
+}
+.m-t-12{
+  margin-top: 12px;
+}
+.m-t-32{
+  margin-top: 32px;
+}
+.flex-item{
+  display: flex;
+  align-items: center;
+}
+.h-100{
+  height: 100%;
+}
+.p-l-12{
+  padding-left: 12px;
+}
+.p-r-12{
+  padding-right: 12px;
+}
+.just-center{
+  justify-content: center;
+}
+.justify-between{
+  justify-content: space-between;
+}
+:not(i):not([class*="icon"]) {
+  font-family: Roboto fonts !important;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: linear-gradient(to top, #93BFCF, #6096B4);
+}
+
+@font-face {
+  font-family: Roboto fonts;
+  src: url("../assets/fonts/roboto/Roboto-Regular.ttf");
+}
+
+@font-face {
+  font-family: Roboto italic;
+  src: url("../assets/fonts/roboto/Roboto-Italic.ttf");
+}
+
+@font-face {
+  font-family: Roboto bold;
+  src: url("../assets/fonts/roboto/Roboto-Bold.ttf");
+}

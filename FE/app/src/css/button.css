@@ -1,0 +1,14 @@
+.tbutton {
+  width: max-content;
+  padding: 10px 20px;
+  background: linear-gradient(to right, #93bfcf, #6096b4) !important;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.tbutton:active{
+  opacity: 0.9;
+}
+button{
+  border: none;
+}

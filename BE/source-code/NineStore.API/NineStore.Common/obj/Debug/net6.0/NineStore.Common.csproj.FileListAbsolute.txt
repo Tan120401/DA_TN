@@ -1,0 +1,14 @@
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\bin\Debug\net6.0\NineStore.Common.deps.json
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\bin\Debug\net6.0\NineStore.Common.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\bin\Debug\net6.0\NineStore.Common.pdb
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.csproj.AssemblyReference.cache
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.GeneratedMSBuildEditorConfig.editorconfig
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.AssemblyInfoInputs.cache
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.AssemblyInfo.cs
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.csproj.CoreCompileInputs.cache
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\refint\NineStore.Common.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.pdb
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\ref\NineStore.Common.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.Resource.Resource.resources
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.Common\obj\Debug\net6.0\NineStore.Common.csproj.GenerateResource.cache

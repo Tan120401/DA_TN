@@ -1,0 +1,88 @@
+.pay__container {
+  display: flex;
+  column-gap: 8px;
+}
+.pay__content-left,
+.pay__content-right {
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  min-height: 358px;
+}
+
+.pay__content-left {
+  width: 60%;
+}
+.pay__content-right {
+  width: 39%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pay__content-user {
+  padding: 32px 12px;
+}
+.pay__content-user .user-fullname,
+.pay__content-user .user-phonenumber {
+  width: 49.5%;
+}
+.placeholder-input {
+  position: absolute;
+  z-index: 100;
+  top: -9px;
+  left: 20px;
+  padding: 0 2px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #a6a5a5;
+  background-color: #fff;
+}
+.pay__content-user .user-fullname,
+.pay__content-user .user-phonenumber,
+.pay__content-user .user-email,
+.pay__content-user .user-address {
+  position: relative;
+}
+
+.pay__content-user .user-pay,
+.pay__content-user .user-paycard {
+  width: 49.5%;
+  border-radius: 8px;
+  border: 1px solid var(--primary-color);
+  height: 48px;
+  position: relative;
+}
+
+.user-pay-img {
+  height: 38px;
+  width: 38px;
+}
+.pay__content-cart-img{
+    width: 96px;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+    margin-right: 16px;
+}
+.pay__content-cart-info{
+    display: flex;  
+    flex-direction: column;
+    row-gap: 8px;
+}
+.pay__content-right .pay__content-cart{
+    padding-top: 32px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--primary-color);
+}
+.pay__content-footer{
+    flex: 1;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.pay-btn{
+    width: 100%;
+    height: 48px;
+    font-size: 16px;
+}
