@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj": {}
+    "D:\\git clone\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj": {}
   },
   "projects": {
-    "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj": {
+    "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
+        "projectUniqueName": "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
         "projectName": "NineStore.Common",
-        "projectPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
+        "projectPath": "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
         "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-        "outputPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\obj\\",
+        "outputPath": "D:\\git clone\\NineStore.API\\NineStore.Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nguye\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -59,14 +59,14 @@
         }
       }
     },
-    "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj": {
+    "D:\\git clone\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj",
+        "projectUniqueName": "D:\\git clone\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj",
         "projectName": "NineStore.DL",
-        "projectPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj",
+        "projectPath": "D:\\git clone\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj",
         "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-        "outputPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.DL\\obj\\",
+        "outputPath": "D:\\git clone\\NineStore.API\\NineStore.DL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nguye\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -83,8 +83,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj": {
-                "projectPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj"
+              "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj": {
+                "projectPath": "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj"
               }
             }
           }

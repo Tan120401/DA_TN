@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace NineStore.DL.UserDL
 {
-    public  interface IUserDL:IBaseDL<User>
+    public  interface IUserDL:IBaseDL<UserRequest>
     {
         /// <summary>
         /// Hàm login
         /// </summary>
         /// <param name="user"></param>
         /// <returns> 1: nếu đăng nhập thành công</returns>
-        int LoginResult(User user);
+        List<UserRequest> LoginResult(UserRequest request);
 
         /// <summary>
         /// Hàm check trùng tên đăng nhập

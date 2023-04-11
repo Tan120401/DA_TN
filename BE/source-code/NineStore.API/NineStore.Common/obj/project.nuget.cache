@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Zwk7vSqBlY3gSkKRn0HD0fLYDO9KNoPWmszJ3vGR5/dIy9DvrdXsRB9VzHwTjghVn0VQGhxeD8yMiZwQaX8x0g==",
+  "dgSpecHash": "PqkxM0LNCm2A5/Zz04AiTxuz6BSjFm5f4PTXWM9N868OAY+Fxd/+VYoI3OyD39c4bEg9IDR2kUYAa1KFusDCsw==",
   "success": true,
-  "projectFilePath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
+  "projectFilePath": "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

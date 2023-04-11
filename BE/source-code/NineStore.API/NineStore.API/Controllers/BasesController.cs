@@ -5,6 +5,8 @@ using NineStore.Common.Entities.DTO;
 using NineStore.Common.Entities;
 using NineStore.Common.Enum;
 using NineStore.Common.Resource;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NineStore.API.Controllers
 {
@@ -35,7 +37,7 @@ namespace NineStore.API.Controllers
         /// </summary>
         /// <returns>Danh sách record</returns>
         /// Created by: NVTan (09/02/2023)
-        [HttpGet]
+        [HttpGet,Authorize(Roles = "Admin")]
         public IActionResult GetAllRecord()
         {
             try

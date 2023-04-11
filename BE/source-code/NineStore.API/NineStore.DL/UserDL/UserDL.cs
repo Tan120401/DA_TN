@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace NineStore.DL.UserDL
 {
-    public class UserDL : BaseDL<User>, IUserDL
+    public class UserDL : BaseDL<UserRequest>, IUserDL
     {
         public int CheckUserName(string userName)
         {
@@ -33,7 +33,7 @@ namespace NineStore.DL.UserDL
 
         }
 
-        public int LoginResult(User user)
+        public List<UserRequest> LoginResult(UserRequest request)
         {
             // Chuẩn bị tên stored
             string storedProcedureName = ProcedureName.Login;
@@ -41,22 +41,21 @@ namespace NineStore.DL.UserDL
             // Chuẩn bị tham số đầu vào cho stored
 
             var parameters = new DynamicParameters();
-            parameters.Add("p_username", user.UserName);
-            parameters.Add("p_password", user.PassWord);
+            parameters.Add("p_username", request.UserName);
+            parameters.Add("p_password", request.PassWord);
 
             // Khởi tạo kết nối đến DB
 
-            int numberOfAffectedRows;
+            dynamic result;
 
             using(var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
             {
                 // Gọi vào DB
-                var result = mySqlConnection.QueryMultiple(storedProcedureName, parameters,commandType: System.Data.CommandType.StoredProcedure);
+                var multy = mySqlConnection.QueryMultiple(storedProcedureName, parameters,commandType: System.Data.CommandType.StoredProcedure);
 
-                numberOfAffectedRows = result.Read<int>().Single();
+                result = multy.Read<UserRequest>().ToList();
             }
-
-            return numberOfAffectedRows;
+            return result;
         }
     }
 }

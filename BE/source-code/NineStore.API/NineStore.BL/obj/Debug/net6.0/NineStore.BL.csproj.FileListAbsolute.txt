@@ -15,3 +15,20 @@ D:\DO_AN\BE\source-code\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL
 D:\DO_AN\BE\source-code\NineStore.API\NineStore.BL\obj\Debug\net6.0\refint\NineStore.BL.dll
 D:\DO_AN\BE\source-code\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.pdb
 D:\DO_AN\BE\source-code\NineStore.API\NineStore.BL\obj\Debug\net6.0\ref\NineStore.BL.dll
+D:\git clone\NineStore.API\NineStore.BL\bin\Debug\net6.0\NineStore.BL.deps.json
+D:\git clone\NineStore.API\NineStore.BL\bin\Debug\net6.0\NineStore.BL.dll
+D:\git clone\NineStore.API\NineStore.BL\bin\Debug\net6.0\NineStore.BL.pdb
+D:\git clone\NineStore.API\NineStore.BL\bin\Debug\net6.0\NineStore.Common.dll
+D:\git clone\NineStore.API\NineStore.BL\bin\Debug\net6.0\NineStore.DL.dll
+D:\git clone\NineStore.API\NineStore.BL\bin\Debug\net6.0\NineStore.Common.pdb
+D:\git clone\NineStore.API\NineStore.BL\bin\Debug\net6.0\NineStore.DL.pdb
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.csproj.AssemblyReference.cache
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.GeneratedMSBuildEditorConfig.editorconfig
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.AssemblyInfoInputs.cache
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.AssemblyInfo.cs
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.csproj.CoreCompileInputs.cache
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.csproj.CopyComplete
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.dll
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\refint\NineStore.BL.dll
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\NineStore.BL.pdb
+D:\git clone\NineStore.API\NineStore.BL\obj\Debug\net6.0\ref\NineStore.BL.dll

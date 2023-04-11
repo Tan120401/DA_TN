@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace NineStore.BL.UserBL
 {
-    public class UserBL : BaseBL<User>, IUserBL
+    public class UserBL : BaseBL<UserRequest>, IUserBL
     {
         #region Field
 
@@ -29,9 +29,9 @@ namespace NineStore.BL.UserBL
 
         #endregion
 
-        public int LoginResult(User user)
+        public List<UserRequest> LoginResult(UserRequest user)
         {
-            int result = _userDL.LoginResult(user);
+            List<UserRequest> result = _userDL.LoginResult(user);
             return result;
         }
 
@@ -40,7 +40,7 @@ namespace NineStore.BL.UserBL
         /// </summary>
         /// <param name="record">Nhân viên muốn kiểm tra validate</param>
         /// <returns>ServiceResult</returns>
-        protected override ServiceResult ValidateCustom(User? record)
+        protected override ServiceResult ValidateCustom(UserRequest? record)
         {
             ServiceResult lstValiDateCustom = new ServiceResult();
             int result = _userDL.CheckUserName(record.UserName);

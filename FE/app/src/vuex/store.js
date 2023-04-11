@@ -34,7 +34,8 @@ const store = createStore({
     async fetchLogin({ commit }, params) {
       try {
         let response = await USER_AXIOS.setLogin(params);
-        if (response.data == 1) {
+        console.log(response.data)
+        if (response.data != null) {
           const success = true;
           commit("setLogin", success);
           router.push({ path: "/" });

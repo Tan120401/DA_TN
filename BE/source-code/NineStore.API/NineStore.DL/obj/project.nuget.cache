@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uoe2b9v60Fo1/rJBpqx7KPrt7hOsGQ23dVlG6mhmpVirsjAECNGjzTwJIaLp99Rp43+z+TobDNaz/G4Js34ccw==",
+  "dgSpecHash": "4D+j5fnN9IZ9B3nF0gDbSMN0Rycz9clLv2yXe4Ww3y0g+ziWfx7aCr71R55gz12Lcz6eeu3QgTcrKtzLW2ButA==",
   "success": true,
-  "projectFilePath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj",
+  "projectFilePath": "D:\\git clone\\NineStore.API\\NineStore.DL\\NineStore.DL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nguye\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\nguye\\.nuget\\packages\\mysqlconnector\\2.2.5\\mysqlconnector.2.2.5.nupkg.sha512"

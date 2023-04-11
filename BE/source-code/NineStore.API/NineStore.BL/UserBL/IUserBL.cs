@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace NineStore.BL.UserBL
 {
-    public interface IUserBL: IBaseBL<User>
+    public interface IUserBL: IBaseBL<UserRequest>
     {
-        int LoginResult(User user);
+        List<UserRequest> LoginResult(UserRequest request);
     }
 }

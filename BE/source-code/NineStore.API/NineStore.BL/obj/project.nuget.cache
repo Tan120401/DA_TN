@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0VA6EFYLUhF1hrfUOXtPFF3Fw/ghJM59HiIge0hR4qtlqBdbGC5iJn6xVnDIXLn/GQDdF895DxCewBP7IOzgUQ==",
+  "dgSpecHash": "GqWAEh59X3sFqZ/HozKOq4saJECSBOqTGVJnJRBiav3UGE19VPqEt7V0h5ZbaIa2rxfIdlZoQc+113AbULkMIA==",
   "success": true,
-  "projectFilePath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.BL\\NineStore.BL.csproj",
+  "projectFilePath": "D:\\git clone\\NineStore.API\\NineStore.BL\\NineStore.BL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nguye\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\nguye\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
