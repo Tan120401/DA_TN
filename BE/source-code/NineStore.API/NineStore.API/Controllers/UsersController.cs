@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 
 namespace NineStore.API.Controllers
 {
@@ -77,12 +78,23 @@ namespace NineStore.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("upload-file")]
+        public IActionResult CreateFile([FromForm] FileModel fileModel)
+        {
+            string path = Path.Combine(@"D:\DO_AN\FE\app\src\assets\img\user", fileModel.FileName);
+            using (Stream stream = new FileStream(path, FileMode.Create))
+            {
+                fileModel.File.CopyTo(stream);
+            }
+            return StatusCode(StatusCodes.Status200OK, 1);
+        }
         private string CreateToken(UserRequest result)
         {
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, result.UserName),
-                new Claim(ClaimTypes.Role, "Admin"),
+                new Claim(ClaimTypes.Role, result.Role),
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                 _configuration.GetSection("AppSettings:Token").Value));
@@ -91,12 +103,22 @@ namespace NineStore.API.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddDays(7),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
+        }
+
+        protected override string CreatePathImg(UserRequest user)
+        {
+            string path = "";
+            if (user.ImgName != null)
+            {
+                path = Path.Combine(@"", user.ImgName);
+            }
+            return path;
         }
 
         /// <summary>

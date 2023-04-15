@@ -2,12 +2,11 @@
   <div id="main">
     <div class="modal-form">
       <img src="../assets/img/login.jpg" alt="" />
-      <div class="modal">
+      <div class="modal1">
         <router-link to="/"><h1 class="logo">Nine Store</h1></router-link>
         <form
           class="login-form"
           @submit.prevent="onLogin"
-          v-if="isLogin"
           ref="validateForm"
         >
           <h1 class="login-title">Đăng nhập</h1>
@@ -35,67 +34,7 @@
           <div class="dont-account">
             <div class="dont-account-text m-r-8 m-t-20">
               Bạn chưa có tài khoản?
-            </div>
-            <span @click="onShowRegister" class="m-t-20">Đăng ký</span>
-          </div>
-        </form>
-        <form
-          class="register-form"
-          v-if="isRegister"
-          @submit.prevent="onRegister"
-          ref="validateForm"
-        >
-          <h1 class="login-title">Đăng ký tài khoản</h1>
-          <TInput
-            type="text"
-            placeholder="Email"
-            v-model="userRegister.Email"
-            name="Email"
-            :rules="['Empty', 'Email']"
-          ></TInput>
-          <TInput
-            type="text"
-            placeholder="Họ và tên"
-            v-model="userRegister.FullName"
-            name="Tên đăng nhập"
-            :rules="['Empty']"
-          ></TInput>
-          <TInput
-            type="text"
-            placeholder="Tên đăng nhập"
-            v-model="userRegister.UserName"
-            name="Tên đăng nhập"
-            :rules="['Empty']"
-          ></TInput>
-          <TInput
-            type="password"
-            placeholder="Mật khẩu"
-            v-model="userRegister.Password"
-            name="Mật khẩu"
-            :rules="['Empty']"
-          ></TInput>
-          <TInput
-            type="password"
-            placeholder="Nhập lại mật khẩu"
-            v-model="confirmPassword"
-            name="Xác nhận mật khẩu"
-            :rules="['Empty']"
-          ></TInput>
-          <span v-if="isConfirmPassError" class="confirm-error"
-            >Xác nhận mật khẩu không đúng</span
-          >
-          <button type="submit" class="tbutton btn-login">Đăng ký</button>
-          <div class="dont-account m-t-12">
-            <div class="dont-account-text m-r-8">Bạn đã có tài khoản?</div>
-            <span @click="onShowLogin">Đăng nhập</span>
-          </div>
-          <div class="accept m-t-12" @click="onAccept">
-            <i
-              class="fa-solid fa-circle-check m-r-8"
-              :style="[isAccept ? 'color:red' : '']"
-            ></i>
-            <div class="dont-account-text">
-              Đồng ý với điều khoản và bảo mật của Nine store
+              <router-link to="/Register"><span class="m-t-20">Đăng ký</span></router-link>
             </div>
           </div>
         </form>
@@ -107,8 +46,7 @@
 <script>
 import TInput from "@/components/TInput.vue";
 
-import { USER, USER_REGISTER } from "@/js/data";
-import  USER_AXIOS  from "@/api/user";
+import { USER } from "@/js/data";
 import { reactive, ref, watch } from "vue";
 import { useStore } from "vuex";
 import _ from "lodash";
@@ -120,16 +58,11 @@ export default {
   },
   setup() {
     const isLogin = ref(true);
-    const isRegister = ref(false);
-    const isAccept = ref(false);
     const user = reactive(_.cloneDeep(USER));
-    const userRegister = reactive(_.cloneDeep(USER_REGISTER));
     const isShowLoginFail = ref(false);
     const $store = useStore();
     const validateForm = ref(null);
 
-    const confirmPassword = ref();
-    const isConfirmPassError = ref(false);
     /**
      * Hàm đăng nhập
      * Created by NVTAN(04/04/2023)
@@ -139,26 +72,6 @@ export default {
       if (inValid.isValidate) {
         await $store.dispatch("fetchLogin", user);
         isShowLoginFail.value = !$store.state.isLogin;
-      }
-    };
-    /**
-     * Hàm đăng ký tài khoản
-     * Created by NVTAN(04/04/2023)
-     */
-    const onRegister = async() => {
-      var inValid = validateData();
-      if (inValid.isValidate) {
-        if (confirmPassword.value != userRegister.Password) {
-          isConfirmPassError.value = true;
-        } else {
-          isConfirmPassError.value = false;
-          try {
-            let response = await USER_AXIOS.setRegister(userRegister);
-            console.log(response)
-          } catch (err) {
-            console.log(err);
-          }
-        }
       }
     };
 
@@ -237,49 +150,14 @@ export default {
         }
       }
     };
-
-    /**
-     * Hàm hiện form đăng ký
-     * Created by NVTAN (30/03/2023)
-     */
-    const onShowRegister = () => {
-      isRegister.value = true;
-      isLogin.value = false;
-    };
-
-    /**
-     * Hàm hiện form đăng nhập
-     * Created by NVTAN (30/03/2023)
-     */
-    const onShowLogin = () => {
-      isRegister.value = false;
-      isLogin.value = true;
-    };
-
-    /**
-     * Hàm chọn chấp nhận điều khoản
-     * Created by NVTAN (30/03/2023)
-     */
-    const onAccept = () => {
-      isAccept.value = !isAccept.value;
-    };
     return {
       isLogin,
-      isRegister,
-      isAccept,
       isShowLoginFail,
       user,
-      userRegister,
       validateForm,
-      confirmPassword,
-      isConfirmPassError,
       validateData,
       validateInput,
-      onShowRegister,
-      onShowLogin,
-      onAccept,
       onLogin,
-      onRegister,
     };
   },
 };
@@ -292,7 +170,7 @@ export default {
   color: var(--sub-color);
   top: -10px;
 }
-.modal {
+.modal1 {
   position: fixed;
   top: 0;
   left: 0;
@@ -305,7 +183,7 @@ export default {
   width: 100%;
   height: calc(100vh - 4px);
 }
-.modal .logo {
+.modal1 .logo {
   position: absolute;
   left: 128px;
   top: 56px;
@@ -367,11 +245,15 @@ export default {
   margin-top: 20px;
 }
 
-.login-fail {
+.login-fail,
+.register-fail {
   position: absolute;
   top: 6px;
   font-size: 11px;
   color: var(--sub-color);
   font-style: italic;
+}
+.register-fail{
+  top: -19px;
 }
 </style>

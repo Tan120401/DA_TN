@@ -11,13 +11,13 @@
     </div>
     <div class="products_text">
       <h2>{{ productname }}</h2>
-      <div class="products_star">
+      <!-- <div class="products_star">
         <i class="fa-solid fa-star"></i>
         <i class="fa-solid fa-star"></i>
         <i class="fa-solid fa-star"></i>
         <i class="fa-solid fa-star-half-stroke"></i>
         <i class="fa-regular fa-star"></i>
-      </div>
+      </div> -->
       <div class="product__price">
         <span class="m-r-8">{{ formatMoney.format(pricediscount) }}</span>
         <span class="product__price-discount">{{

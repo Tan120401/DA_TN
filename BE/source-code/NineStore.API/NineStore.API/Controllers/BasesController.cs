@@ -37,7 +37,7 @@ namespace NineStore.API.Controllers
         /// </summary>
         /// <returns>Danh sách record</returns>
         /// Created by: NVTan (09/02/2023)
-        [HttpGet,Authorize(Roles = "Admin")]
+        [HttpGet,Authorize(Roles = "admin")]
         public IActionResult GetAllRecord()
         {
             try
@@ -110,7 +110,8 @@ namespace NineStore.API.Controllers
         {
             try
             {
-                var result = _baseBL.InsertRecord(record);
+                string imgName = CreatePathImg(record);
+                var result = _baseBL.InsertRecord(record, imgName);
                 //Xử lý kết quả trả về
                 if (result.IsSuccess)
                 {
@@ -161,7 +162,8 @@ namespace NineStore.API.Controllers
         {
             try
             {
-                var result = _baseBL.UpdateRecord(recordId, record);
+                string imgName = CreatePathImg(record);
+                var result = _baseBL.UpdateRecord(recordId, record, imgName);
                 if (result.IsSuccess)
                 {
                     return StatusCode(StatusCodes.Status200OK, 1);
@@ -246,6 +248,10 @@ namespace NineStore.API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, errorExp);
         }
 
+        protected virtual string CreatePathImg(T record)
+        {
+            return "";
+        }
         #endregion
     }
 }

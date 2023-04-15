@@ -935,6 +935,9 @@
       "NineStore.Common/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Features": "2.2.0"
+        },
         "compile": {
           "bin/placeholder/NineStore.Common.dll": {}
         },
@@ -2332,11 +2335,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\git clone\\NineStore.API\\NineStore.API\\NineStore.API.csproj",
+      "projectUniqueName": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.API\\NineStore.API.csproj",
       "projectName": "NineStore.API",
-      "projectPath": "D:\\git clone\\NineStore.API\\NineStore.API\\NineStore.API.csproj",
+      "projectPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.API\\NineStore.API.csproj",
       "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-      "outputPath": "D:\\git clone\\NineStore.API\\NineStore.API\\obj\\",
+      "outputPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nguye\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2353,11 +2356,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\git clone\\NineStore.API\\NineStore.BL\\NineStore.BL.csproj": {
-              "projectPath": "D:\\git clone\\NineStore.API\\NineStore.BL\\NineStore.BL.csproj"
+            "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.BL\\NineStore.BL.csproj": {
+              "projectPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.BL\\NineStore.BL.csproj"
             },
-            "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj": {
-              "projectPath": "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj"
+            "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj": {
+              "projectPath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj"
             }
           }
         }

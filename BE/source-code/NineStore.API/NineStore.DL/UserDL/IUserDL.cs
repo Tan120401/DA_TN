@@ -22,7 +22,7 @@ namespace NineStore.DL.UserDL
         /// </summary>
         /// <param name="userName"></param>
         /// <returns>1: nếu đã trùng</returns>
-        int CheckUserName(string userName);
+        int CheckUserName(string userName, Guid? userId);
 
     }
 }

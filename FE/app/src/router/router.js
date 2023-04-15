@@ -6,6 +6,8 @@ import TProductdetail from "@/views/TProductDetail";
 import TCart from "@/views/TCart";
 import TPay from "@/views/TPay";
 import TLogin from "@/views/TLogin";
+import TRegister from "@/views/TRegister";
+import TProfile from "@/views/TProfile";
 import THomeAdmin from "@/views/admin/THomeAdmin";
 const routes = [
   {
@@ -32,6 +34,16 @@ const routes = [
     path: "/Login",
     name: "Login",
     component: TLogin,
+  },
+  {
+    path: "/Register",
+    name: "Register",
+    component: TRegister,
+  },
+  {
+    path: "/Profile/:id",
+    name: "Profile",
+    component: TProfile,
   },
   {
     path: "/Pay",

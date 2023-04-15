@@ -120,9 +120,14 @@ const USER = {
 const USER_REGISTER = {
   Email: "",
   FullName: "",
-  Role: 0,
+  Role: "user",
   UserName: "",
   Password: "",
 };
 
-export { PRODUCTS, NEWS, PRODUCTS_CART, USER, USER_REGISTER };
+const FILE_OPTIONS = {
+  FileName: null,
+  File: null,
+}
+
+export { PRODUCTS, NEWS, PRODUCTS_CART, USER, USER_REGISTER,FILE_OPTIONS };

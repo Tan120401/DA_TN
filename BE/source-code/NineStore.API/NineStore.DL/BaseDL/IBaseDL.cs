@@ -35,7 +35,7 @@ namespace NineStore.DL.BaseDL
         /// 0: Nếu insert thất bại
         /// </returns>
         /// Created By: NVTAN (09/02/2023)
-        int InsertRecord(T record);
+        int InsertRecord(T record, string? imgName);
 
         /// Sửa thông tin bản ghi
         /// </summary>
@@ -46,7 +46,7 @@ namespace NineStore.DL.BaseDL
         /// 0: Nếu insert thất bại
         /// </returns>
         /// Created by: NVTan (09/02/2023)
-        int UpdateRecord(Guid recordId, T record);
+        int UpdateRecord(Guid recordId, T record, string? imgName);
 
         /// <summary>
         /// Xóa 1 bản ghi

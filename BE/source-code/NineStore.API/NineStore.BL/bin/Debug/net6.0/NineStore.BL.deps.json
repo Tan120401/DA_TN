@@ -754,6 +754,9 @@
         }
       },
       "NineStore.Common/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Features": "2.2.0"
+        },
         "runtime": {
           "NineStore.Common.dll": {}
         }

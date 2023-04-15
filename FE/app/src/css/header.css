@@ -22,15 +22,18 @@
 #header nav ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
-
+#header nav a{
+  height: 48px;
+}
 #header nav ul li {
   display: inline-block;
   font-weight: 400;
   margin: 5px 16px;
 }
 
-.active {
+#header .active {
   font-weight: 700;
   border-bottom: 4px solid var(--primary-color);
   padding-bottom: 15px;

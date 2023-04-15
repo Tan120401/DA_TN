@@ -13,12 +13,13 @@ namespace NineStore.DL.UserDL
 {
     public class UserDL : BaseDL<UserRequest>, IUserDL
     {
-        public int CheckUserName(string userName)
+        public int CheckUserName(string userName,Guid? userId)
         {
             string storedProcedureName = "Proc_Check_UserName";
 
             var parameters = new DynamicParameters();
             parameters.Add("p_UserName", userName);
+            parameters.Add("p_UserId", userId);
 
             int result;
             

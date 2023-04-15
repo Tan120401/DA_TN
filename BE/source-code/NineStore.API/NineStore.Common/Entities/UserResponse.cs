@@ -16,8 +16,8 @@ namespace NineStore.Common.Entities
         public string? PassWord { get; set; }
         public string? FullName { get; set; }
         public string? Email { get; set; }
-        public Role? Role { get; set; }
-
+        public string? Role { get; set; }
+        public string ImgName { get; set; }
         public string? Token { get; set; }
 
 
@@ -29,6 +29,7 @@ namespace NineStore.Common.Entities
             FullName = request.FullName;
             Email = request.Email;
             Role = request.Role;
+            ImgName = request.ImgName;
             Token = token;
         }
         /* public string RefreshToken { get; set; } = string.Empty;

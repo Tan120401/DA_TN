@@ -43,7 +43,7 @@ namespace NineStore.BL.UserBL
         protected override ServiceResult ValidateCustom(UserRequest? record)
         {
             ServiceResult lstValiDateCustom = new ServiceResult();
-            int result = _userDL.CheckUserName(record.UserName);
+            int result = _userDL.CheckUserName(record.UserName,record.UserId);
             if (result > 0)
             {
                 lstValiDateCustom.IsSuccess = false;

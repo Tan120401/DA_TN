@@ -53,7 +53,7 @@ namespace NineStore.DL.BaseDL
             // Chuẩn bị tham số đầu vào cho stored procedure
             var parameters = new DynamicParameters();
             parameters.Add("p_" + typeof(T).Name + "Id", recordId);
-
+                
             // Khởi tạo kết nối tới Database
             dynamic record;
             using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
@@ -73,7 +73,7 @@ namespace NineStore.DL.BaseDL
         /// 0: Nếu insert thất bại
         /// </returns>
         /// Created By: NVTAN (09/02/2023)
-        public int InsertRecord(T record)
+        public int InsertRecord(T record, string? imgName)
         {
             //Chuẩn bị tên stored procedure
             string storedProcedureName = string.Format(ProcedureName.Insert, typeof(T).Name);
@@ -82,7 +82,14 @@ namespace NineStore.DL.BaseDL
             var properties = typeof(T).GetProperties();
             foreach (var prop in properties)
             {
-                parameters.Add($"p_{prop.Name}", prop.GetValue(record));
+                if (prop.Name == "ImgName")
+                {
+                    parameters.Add($"p_{prop.Name}", imgName);
+                }
+                else
+                {
+                    parameters.Add($"p_{prop.Name}", prop.GetValue(record));
+                }
             }
             GeneratePrimaryKey(parameters, properties, null);
             //Khởi tạo kết nối tới DB
@@ -106,7 +113,7 @@ namespace NineStore.DL.BaseDL
         /// 0: Nếu insert thất bại
         /// </returns>
         /// Created by: NVTan (09/02/2023)
-        public int UpdateRecord(Guid recordId, T record)
+        public int UpdateRecord(Guid recordId, T record, string? imgName)
         {
             // procedurename
             string storedProcedureName = string.Format(ProcedureName.Update, typeof(T).Name);
@@ -117,14 +124,19 @@ namespace NineStore.DL.BaseDL
             //Chuẩn bị tham số đầu vào
             foreach (var prop in properties)
             {
-                parameters.Add($"p_{prop.Name}", prop.GetValue(record));
-
+                if(prop.Name == "ImgName")
+                {
+                    parameters.Add($"p_{prop.Name}", imgName);
+                }
+                else
+                {
+                    parameters.Add($"p_{prop.Name}", prop.GetValue(record));
+                }
             }
             GeneratePrimaryKey(parameters, properties, recordId);
             // Khởi tạo kết nối DB
             using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
             {
-
                 // Gọi proc
                 var numberOfRowsAffect = mySqlConnection.Execute(storedProcedureName, parameters, commandType: System.Data.CommandType.StoredProcedure);
                 return numberOfRowsAffect;

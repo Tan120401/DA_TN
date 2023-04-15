@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "PqkxM0LNCm2A5/Zz04AiTxuz6BSjFm5f4PTXWM9N868OAY+Fxd/+VYoI3OyD39c4bEg9IDR2kUYAa1KFusDCsw==",
+  "dgSpecHash": "CxU8f0UOSCQpviSA2kXcT2BQJHx0YXL5l6oQVisXAXi/UNclwhOCtulF1njFPJq5oNepjOos1Y6Wfbbf/EIJOA==",
   "success": true,
-  "projectFilePath": "D:\\git clone\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\nguye\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
+    "C:\\Users\\nguye\\.nuget\\packages\\microsoft.extensions.primitives\\2.2.0\\microsoft.extensions.primitives.2.2.0.nupkg.sha512",
+    "C:\\Users\\nguye\\.nuget\\packages\\system.memory\\4.5.1\\system.memory.4.5.1.nupkg.sha512",
+    "C:\\Users\\nguye\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.1\\system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512"
+  ],
   "logs": []
 }

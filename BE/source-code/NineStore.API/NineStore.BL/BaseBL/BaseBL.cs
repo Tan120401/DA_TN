@@ -49,9 +49,9 @@ namespace NineStore.BL.BaseBL
         /// </summary>
         /// <param name="employee">Đối tượng nhân viên cần thêm mới</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
-        public ServiceResult InsertRecord(T record)
+        public ServiceResult InsertRecord(T record, string? imgName)
         {
-            return HandleInsertOrUpdate(Guid.Empty, record);
+            return HandleInsertOrUpdate(Guid.Empty, record,  imgName);
         }
 
         /// Sửa thông tin bản ghi
@@ -63,9 +63,9 @@ namespace NineStore.BL.BaseBL
         /// 0: Nếu insert thất bại
         /// </returns>
         /// Created by: NVTan (09/02/2023)
-        public ServiceResult UpdateRecord(Guid recordId, T record)
+        public ServiceResult UpdateRecord(Guid recordId, T record, string? imgName)
         {
-            return HandleInsertOrUpdate(recordId, record);
+            return HandleInsertOrUpdate(recordId, record,  imgName);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace NineStore.BL.BaseBL
         /// <param name="recordId">Id của nhân viên muốn sửa</param>
         /// <param name="record">Thông tin nhân viên muốn sửa hoặc thêm</param>
         /// <returns></returns>
-        public ServiceResult HandleInsertOrUpdate(Guid recordId, T record)
+        public ServiceResult HandleInsertOrUpdate(Guid recordId, T record, string? imgName)
         {
             ServiceResult validateResults = new ServiceResult();
             validateResults = ValidateData(record);
@@ -87,11 +87,11 @@ namespace NineStore.BL.BaseBL
             var numberOfAffectedResult = 0;
             if (recordId == Guid.Empty)
             {
-                numberOfAffectedResult = _baseDL.InsertRecord(record);
+                numberOfAffectedResult = _baseDL.InsertRecord(record, imgName);
             }
             else
             {
-                numberOfAffectedResult = _baseDL.UpdateRecord(recordId, record); 
+                numberOfAffectedResult = _baseDL.UpdateRecord(recordId, record,imgName); 
             }
             if (numberOfAffectedResult > 0)
             {

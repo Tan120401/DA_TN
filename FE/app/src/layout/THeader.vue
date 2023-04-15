@@ -34,9 +34,12 @@
             :class="{ 'user__img-avatar': $store.state.isLogin }"
           >
             <router-link to="/Login"
-              ><span v-if="!$store.state.isLogin">Login</span></router-link
+              ><span v-if="!$store.state.isLogin" class="flex-item flex-col">Login</span></router-link
             >
-            <span v-if="$store.state.isLogin" @click="logout">Logout</span>
+            <div v-if="$store.state.isLogin" class="flex-item flex-col">
+              <router-link :to = "`/Profile/${$store.state.userId}`"><span>Thông tin</span></router-link>
+              <span @click="logout">Logout</span>
+            </div>
           </div>
         </div>
       </div>
@@ -45,12 +48,14 @@
 </template>
 
 <script>
+import router from '@/router/router';
 import { useStore } from "vuex";
 export default {
   setup() {
     const $store = useStore();
     const logout = () => {
       $store.dispatch("setLogout");
+      router.push({path: "/"})
     };
     return {
       logout,
@@ -72,6 +77,7 @@ export default {
   padding-bottom: 2px;
 }
 .user__infor {
+  min-width: 92px;
   position: absolute;
   top: 20px;
   right: -19px;
@@ -80,6 +86,9 @@ export default {
   border-radius: 8px;
   cursor: pointer;
   display: none;
+}
+.user__infor span{
+  text-align: center;
 }
 .user__img-avatar {
   top: 26px !important;

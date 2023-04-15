@@ -32,7 +32,7 @@ namespace NineStore.BL.BaseBL
         /// </summary>
         /// <param name="employee">Đối tượng nhân viên cần thêm mới</param>
         /// <returns>Số bản ghi bị ảnh hưởng</returns>
-        ServiceResult InsertRecord(T record);
+        ServiceResult InsertRecord(T record, string? imgName);
 
         // <summary>
         /// Sửa thông tin bản ghi
@@ -44,7 +44,7 @@ namespace NineStore.BL.BaseBL
         /// 0: Nếu insert thất bại
         /// </returns>
         /// Created by: NVTan (09/02/2023)
-        ServiceResult UpdateRecord(Guid recordId, T record);
+        ServiceResult UpdateRecord(Guid recordId, T record, string? imgName);
 
         /// <summary>
         /// Xóa 1 bản ghi

@@ -1,17 +1,62 @@
 <template>
   <div class="banner">
     <div class="slide">
-      <div class="banner__btn left">
-        <i class="fa-solid fa-chevron-left"></i>
-      </div>
       <div
-        class="slide__show-img"
-        style="
-          background-image: url(http://file.hstatic.net/1000341630/collection/banner-giay-sneaker_513d785b2ee94ce9905683e4e0fe37ff.jpg);
-        "
-      ></div>
-      <div class="banner__btn right">
-        <i class="fa-solid fa-chevron-right"></i>
+        id="carouselExampleIndicators"
+        class="carousel slide"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
+        </div>
+        <div class="carousel-inner">
+          <div class=" carousel-item active">
+            <img src="../assets/img/banner3.webp" class="d-block w-100 h-500" alt="..." />
+          </div>
+          <div class="carousel-item">
+            <img src="../assets/img/banner2.webp" class="d-block w-100 h-500" alt="..." />
+          </div>
+          <div class="carousel-item">
+            <img src="../assets/img/banner1.webp" class="d-block w-100 h-500" alt="..." />
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
     </div>
   </div>
@@ -24,4 +69,7 @@ export default {
 </script>
 
 <style>
+.h-500{
+  height: 500px;
+}
 </style>
