@@ -15,6 +15,7 @@
                   "
                 >
                   <img
+                    v-if="imgUser"
                     v-bind:src="imgUser"
                     alt="Avatar"
                     class="img-fluid my-5"
@@ -63,7 +64,7 @@
           <h2>Thông tin cá nhân</h2>
         </div>
         <i class="fa-solid fa-xmark t-icon-close" @click="onHideFormEdit"></i>
-        <input type="file" @change="onChoseFile" />
+        <label class="mb-2" for="">Email</label>
         <TInput
           type="text"
           placeholder="Email"
@@ -71,6 +72,7 @@
           :rules="['Empty']"
           v-model="userInfor.Email"
         ></TInput>
+        <label class="mb-2" for="">Họ và Tên</label>
         <TInput
           type="text"
           placeholder="Họ và Tên"
@@ -78,6 +80,7 @@
           :rules="['Empty']"
           v-model="userInfor.FullName"
         ></TInput>
+        <label class="mb-2" for="">Tên đăng nhập</label>
         <TInput
           type="text"
           placeholder="Tên đăng nhập"
@@ -85,6 +88,7 @@
           :rules="['Empty']"
           v-model="userInfor.UserName"
         ></TInput>
+        <label class="mb-2" for="">Mật khẩu</label>
         <TInput
           type="text"
           placeholder="Mật khẩu"
@@ -92,6 +96,20 @@
           :rules="['Empty']"
           v-model="userInfor.PassWord"
         ></TInput>
+        <label class="mb-2" for="">Avatar</label>
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <input type="file" id="files" hidden @change="onChoseFile" />
+          <label for="files" class="btn btn-secondary btn-sm"
+            >Chọn hình ảnh</label
+          >
+          <img
+            v-if="url"
+            :src="url"
+            alt="Avatar"
+            class="img-fluid rounded-1 border px-2"
+            style="width: 80px"
+          />
+        </div>
         <button type="submit" class="tbutton btn-login">Sửa</button>
       </form>
     </div>
@@ -108,6 +126,7 @@ import { FILE_OPTIONS } from "@/js/data";
 import _ from "lodash";
 import { reactive, ref } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 export default {
   name: "TProfile",
   components: {
@@ -116,12 +135,24 @@ export default {
     TInput,
   },
   setup() {
+    const $store = useStore();
+    const url = ref();
     const userInfo = ref([]);
     const userInfor = ref();
     const route = useRoute();
     const imgUser = ref("");
+
     const isShowFormEdit = ref(false);
     const fileChange = reactive(_.cloneDeep(FILE_OPTIONS));
+
+    const getUserByIdAfterUpdate = (param) => {
+      $store.dispatch("getUserById", param);
+    };
+
+    const onFileChange = (e) => {
+      const file = e.target.files[0];
+      url.value = URL.createObjectURL(file);
+    };
 
     /**
      * Hàm lấy dữ liệu user
@@ -132,7 +163,7 @@ export default {
         let response = await USER_AXIOS.getUserById(param);
         if (response) {
           userInfo.value = response.data[0];
-          imgUser.value = true
+          imgUser.value = response.data[0].ImgName
             ? require("../assets/img/user/" + response.data[0].ImgName)
             : require("../assets/img/user/avatar-null.jpeg");
         }
@@ -149,6 +180,9 @@ export default {
     const onShowFormEdit = () => {
       isShowFormEdit.value = true;
       userInfor.value = _.cloneDeep(userInfo.value);
+      fileChange.FileName = null;
+      fileChange.File = null;
+      url.value = null;
     };
     /**
      * Hàm ẩn form sửa
@@ -173,9 +207,9 @@ export default {
         );
         if (response) {
           if (fileChange.FileName != null && fileChange.File != null) {
-            console.log(fileChange)
             await uploadFile(fileChange);
           }
+          getUserByIdAfterUpdate(route.params.id);
           getUserInfor(route.params.id);
           onHideFormEdit();
         }
@@ -183,14 +217,15 @@ export default {
         console.log(err);
       }
     };
-
     /**
      * Hàm bắt sự kiện khi chọn file
      * Created by NVTAN(10/04/2023)
      */
     const onChoseFile = (event) => {
-      fileChange.FileName = event.target.files[0].name;
-      fileChange.File = event.target.files[0];
+      const file = event.target.files[0];
+      fileChange.FileName = file.name;
+      fileChange.File = file;
+      url.value = URL.createObjectURL(file);
     };
     /**
      * Hàm thêm file vào database
@@ -206,7 +241,10 @@ export default {
     };
 
     return {
+      $store,
+      url,
       onChoseFile,
+      onFileChange,
       route,
       userInfo,
       userInfor,
@@ -218,6 +256,7 @@ export default {
       onHideFormEdit,
       onUpdateProfile,
       uploadFile,
+      getUserByIdAfterUpdate,
     };
   },
 };

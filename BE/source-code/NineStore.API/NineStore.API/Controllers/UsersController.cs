@@ -30,8 +30,6 @@ namespace NineStore.API.Controllers
 
         #region Constructor
 
-
-
         #endregion
 
         #region Method

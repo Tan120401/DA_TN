@@ -6,10 +6,8 @@ import router from "@/router/router";
 const store = createStore({
   state() {
     return {
-      count: 0,
       isLogin: false,
-      userId: null,
-      token: null,
+      userInfo: [],
     };
   },
   getters: {},
@@ -19,16 +17,12 @@ const store = createStore({
     },
     setLogin(state, payLoad) {
       if (payLoad != false) {
-        console.log(payLoad);
         if (payLoad.data.Token) {
           state.isLogin = true;
-          state.token = payLoad.data.Token;
-          state.userId = payLoad.data.UserId;
+          state.userInfo = payLoad.data;
           localStorage.setItem("isLogin", true);
-          localStorage.setItem("userId", payLoad.data.UserId);
-          localStorage.setItem("token", payLoad.data.Token);
-
-          
+          localStorage.setItem("userInfo", JSON.stringify(payLoad.data));
+          console.log(payLoad.data);
         }
       } else {
         state.isLogin = false;
@@ -37,16 +31,22 @@ const store = createStore({
     Logout(state) {
       state.isLogin = false;
       localStorage.removeItem("isLogin");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("token");
+      localStorage.removeItem("userInfo");
+    },
+    getUserById(state, payLoad) {
+      if (payLoad) {
+        console.log(payLoad.data[0])
+        state.userInfo = payLoad.data[0];
+        localStorage.setItem("userInfo", JSON.stringify(payLoad.data[0]));
+      }
     },
     initializeStore(state) {
       if (localStorage.getItem("isLogin")) {
         state.isLogin =
           String(localStorage.getItem("isLogin")).toLowerCase() === "true";
       }
-      if (localStorage.getItem("userId")) {
-        state.userId = localStorage.getItem("userId");
+      if (localStorage.getItem("userInfo")) {
+        state.userInfo = JSON.parse(localStorage.getItem("userInfo"));
       }
     },
   },
@@ -60,6 +60,18 @@ const store = createStore({
         }
       } catch (err) {
         commit("setLogin", false);
+        console.log(err);
+      }
+    },
+    async getUserById({ commit }, param) {
+      try {
+        let response = await USER_AXIOS.getUserById(param);
+        if (response.data != null) {
+          commit("getUserById", response);
+          router.push({ path: "/" });
+        }
+      } catch (err) {
+        commit("getUserById", false);
         console.log(err);
       }
     },
