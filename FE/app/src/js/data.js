@@ -113,12 +113,10 @@ const USER = {
   username: "",
   password: "",
   fullname: "",
-  email: "",
   role: null,
 };
 
 const USER_REGISTER = {
-  Email: "",
   FullName: "",
   Role: "user",
   UserName: "",

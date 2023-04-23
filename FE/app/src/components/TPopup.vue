@@ -18,7 +18,7 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body"> {{ popupContent }}</div>
+        <div class="modal-body">{{ popupContent }}</div>
         <div class="modal-footer">
           <button
             type="button"
@@ -27,21 +27,28 @@
           >
             Đóng
           </button>
-          <button type="button" class="btn btn-primary">Lưu</button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            @click="$emit('handleClick')"
+          >
+            Xóa
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-export default {
+import { defineEmits, defineComponent } from "vue";
+export default defineComponent({
   name: "TPopup",
-  props:['popupId','popupTile','popupContent'],
-  setup(){
-    return{
-    }
-  }
-};
+  props: ["popupId", "popupTile", "popupContent"],
+  emits: ["handleClick"],
+  setup({ emit }) {
+    return {};
+  },
+});
 </script>
 
 <style>

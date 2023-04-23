@@ -17,7 +17,7 @@
         <li>
           <a
             href="#"
-            class="nav-link"
+            class="nav-link text-white"
             :class="{ active: $route.name == 'HomeAdmin' }"
             aria-current="page"
           >
@@ -26,30 +26,58 @@
           </a>
         </li></router-link
       >
-      <li>
-        <a href="#" class="nav-link text-white">
-          <i class="bi me-2 bi-table"></i>
-          Đơn hàng
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <i class="bi me-2 bi-grid-fill"></i>
-          Sản phẩm
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <i class="bi me-2 bi-person-circle"></i>
-          Người dùng
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <i class="bi me-2 bi-pie-chart"></i>
-          Thống kê báo cáo
-        </a>
-      </li>
+      <router-link to="/OrderAdmin">
+        <li>
+          <a
+            href="#"
+            class="nav-link text-white"
+            :class="{ active: $route.name == 'OrderAdmin' }"
+            aria-current="page"
+          >
+            <i class="bi me-2 bi-table"></i>
+            Đơn hàng
+          </a>
+        </li></router-link
+      >
+      <router-link to="/ProductAdmin">
+        <li>
+          <a
+            href="#"
+            class="nav-link text-white"
+            :class="{ active: $route.name == 'ProductAdmin' }"
+            aria-current="page"
+          >
+            <i class="bi me-2 bi-grid-fill"></i>
+            Sản phẩm
+          </a>
+        </li></router-link
+      >
+      <router-link to="/CustomerAdmin">
+        <li>
+          <a
+            href="#"
+            class="nav-link text-white"
+            :class="{ active: $route.name == 'CustomerAdmin' }"
+            aria-current="page"
+          >
+            <i class="bi me-2 bi-person-circle"></i>
+            Người dùng
+          </a>
+        </li></router-link
+      >
+      <router-link to="/ReportAdmin">
+        <li>
+          <a
+            href="#"
+            class="nav-link text-white"
+            :class="{ active: $route.name == 'ReportAdmin' }"
+            aria-current="page"
+          >
+            <i class="bi me-2 bi-pie-chart"></i>
+            Thống kê báo cáo
+          </a>
+        </li></router-link
+      >
     </ul>
   </div>
 </template>

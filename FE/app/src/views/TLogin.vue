@@ -4,27 +4,22 @@
       <img src="../assets/img/login.jpg" alt="" />
       <div class="modal1">
         <router-link to="/"><h1 class="logo">Nine Store</h1></router-link>
-        <form
-          class="login-form"
-          @submit.prevent="onLogin"
-          ref="validateForm"
-        >
+        <form class="login-form" @submit.prevent="onLogin" ref="validateForm">
           <h1 class="login-title">Đăng nhập</h1>
           <TInput
             type="text"
             placeholder="Tên đăng nhập"
             name="Tên đăng nhập"
             v-model="user.username"
-            :rules="['Empty']"
+            :rules="['Email']"
           ></TInput>
           <TInput
             type="password"
             placeholder="Mật khẩu"
             name="Mật khẩu"
             v-model="user.password"
-            :rules="['Empty']"
+            :rules="['Password']"
           ></TInput>
-
           <button type="submit" class="tbutton btn-login">Đăng nhập</button>
           <div style="position: relative">
             <span class="login-fail" v-if="isShowLoginFail"
@@ -34,7 +29,9 @@
           <div class="dont-account">
             <div class="dont-account-text m-r-8 m-t-20">
               Bạn chưa có tài khoản?
-              <router-link to="/Register"><span class="m-t-20">Đăng ký</span></router-link>
+              <router-link to="/Register"
+                ><span class="m-t-20">Đăng ký</span></router-link
+              >
             </div>
           </div>
         </form>
@@ -50,7 +47,7 @@ import { USER } from "@/js/data";
 import { reactive, ref, watch } from "vue";
 import { useStore } from "vuex";
 import _ from "lodash";
-
+import { validateData } from "@/js/validateion";
 export default {
   name: "TLogin",
   components: {
@@ -62,92 +59,16 @@ export default {
     const isShowLoginFail = ref(false);
     const $store = useStore();
     const validateForm = ref(null);
-
     /**
      * Hàm đăng nhập
      * Created by NVTAN(04/04/2023)
      */
     const onLogin = async () => {
-      var inValid = validateData();
+      var lstInput = validateForm.value.querySelectorAll("input");
+      var inValid = validateData(lstInput);
       if (inValid.isValidate) {
         await $store.dispatch("fetchLogin", user);
         isShowLoginFail.value = !$store.state.isLogin;
-      }
-    };
-
-    /**
-     * Hàm validate dữ liệu
-     * Created by NVTAN(04/04/2023)
-     */
-    const validateData = () => {
-      var isValidate = true;
-      var lstInput = validateForm.value.querySelectorAll("input");
-      if (lstInput) {
-        for (var i = 0; i < lstInput.length; i++) {
-          var component = lstInput[i].__vueParentComponent;
-          if (component.props.rules) {
-            let validate = validateInput(lstInput[i]);
-            if (validate) {
-              isValidate = false;
-            }
-          }
-        }
-      }
-      return {
-        isValidate: isValidate,
-      };
-    };
-    /**
-     * Hàm validate ô input
-     * Created by NVTAN(04/04/2023)
-     */
-    const validateInput = (input) => {
-      var component = input.__vueParentComponent;
-      // Lấy ra danh sách prop
-      var props = component.props;
-      var setup = component.setupState;
-      // Lấy ra danh sách validate
-      var rules = props.rules;
-      var name = props.name;
-      var val = input.value;
-      let inValid = true;
-      if (rules && rules.length) {
-        for (var i = 0; i < rules.length; i++) {
-          if (rules[i] == "Empty") {
-            if (!val || val.trim() == "") {
-              setup.isValidate = true;
-              setup.messageValidate = name + " không được để trống.";
-              inValid = true;
-            } else {
-              inValid = false;
-            }
-          } else if (rules[i] == "Email") {
-            const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (val && !val.match(regexEmail)) {
-              setup.isValidate = true;
-              setup.messageValidate = name + " không đúng định dạng.";
-              inValid = true;
-            } else {
-              inValid = false;
-            }
-          }
-          return inValid;
-          // else if (rules[i] == "Number") {
-          //   const regexNumber = /^\d+$/;
-          //   if (val && !val.match(regexNumber)) {
-          //     setup.isEmpty = true;
-          //     setup.validateError = name + " không đúng định dạng.";
-          //     return {
-          //       isValid: false,
-          //       textValidate: setup.validateError,
-          //     };
-          //   } else {
-          //     return {
-          //       isValid: true,
-          //     };
-          //   }
-          // }
-        }
       }
     };
     return {
@@ -155,8 +76,6 @@ export default {
       isShowLoginFail,
       user,
       validateForm,
-      validateData,
-      validateInput,
       onLogin,
     };
   },
@@ -253,7 +172,7 @@ export default {
   color: var(--sub-color);
   font-style: italic;
 }
-.register-fail{
+.register-fail {
   top: -19px;
 }
 </style>

@@ -74,7 +74,7 @@
           <h3>Giỏ hàng của tôi</h3>
           <div class="pay__content-cart flex-item">
             <img
-              src="@/assets/img/1.1nike.png"
+              src="@/assets/img/product/1.1nike.png"
               alt=""
               class="pay__content-cart-img"
             />

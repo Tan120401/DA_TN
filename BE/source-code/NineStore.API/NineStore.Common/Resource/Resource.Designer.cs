@@ -124,6 +124,15 @@ namespace NineStore.Common.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tên người dùng không tồn tại.
+        /// </summary>
+        public static string NotExistUserName {
+            get {
+                return ResourceManager.GetString("NotExistUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @&quot;^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$&quot;.
         /// </summary>
         public static string RegexEmail {

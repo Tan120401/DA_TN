@@ -22,9 +22,41 @@ namespace NineStore.BL.UserBL
 
         #region Constructor
 
-        public UserBL(IUserDL userDL):base(userDL)
+        public UserBL(IUserDL userDL) : base(userDL)
         {
             _userDL = userDL;
+        }
+
+        public ServiceResult ForgotPassword(string userName, string newPassword)
+        {
+            int result = _userDL.CheckUserName(userName, Guid.Empty);
+            int numberAffectedRow = _userDL.ForgotPassword(userName, newPassword);
+            if (result < 1)
+            {
+                return new ServiceResult
+                {
+                    IsSuccess = false,
+                    ErrorCode = ErrorCode.NotExistUserName,
+                    Data = Resource.NotExistUserName
+                };
+            }
+            else if(numberAffectedRow > 0)
+            {
+                return new ServiceResult
+                {
+                    IsSuccess = true,
+                };
+            }
+            else
+            {
+                return new ServiceResult
+                {
+                    IsSuccess = false,
+                    ErrorCode = ErrorCode.NoData,
+                    Data = "Lỗi khi gọi vào DL",
+                };
+            }
+            
         }
 
         #endregion
@@ -35,6 +67,7 @@ namespace NineStore.BL.UserBL
             return result;
         }
 
+
         /// <summary>
         /// Hàm valdate ghi đè ở baseBL
         /// </summary>
@@ -43,7 +76,7 @@ namespace NineStore.BL.UserBL
         protected override ServiceResult ValidateCustom(UserRequest? record)
         {
             ServiceResult lstValiDateCustom = new ServiceResult();
-            int result = _userDL.CheckUserName(record.UserName,record.UserId);
+            int result = _userDL.CheckUserName(record.UserName, record.UserId);
             if (result > 0)
             {
                 lstValiDateCustom.IsSuccess = false;

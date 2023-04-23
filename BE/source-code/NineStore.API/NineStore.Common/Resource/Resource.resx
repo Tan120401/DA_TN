@@ -144,6 +144,9 @@
     <value>Email không đúng định dạng</value>
     <comment>Lỗi không đúng định dạng email</comment>
   </data>
+  <data name="NotExistUserName" xml:space="preserve">
+    <value>Tên người dùng không tồn tại</value>
+  </data>
   <data name="RegexEmail" xml:space="preserve">
     <value>@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"</value>
     <comment>RegexEmail</comment>

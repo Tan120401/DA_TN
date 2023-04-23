@@ -20,7 +20,9 @@
           >
             <img
               :src="
-                require(`../../assets/img/user/${$store.state.userInfo.ImgName}`)
+                require(`../../assets/img/user/${
+                  $store.state.userInfo.ImgName || 'avatar-null.jpeg'
+                }`)
               "
               alt=""
               width="32"

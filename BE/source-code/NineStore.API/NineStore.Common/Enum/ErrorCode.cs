@@ -27,5 +27,10 @@ namespace NineStore.Common.Enum
         /// Trùng mã
         /// </summary>
         DuplicateCode = 4,
+
+        /// <summary>
+        /// Không tồn tại người dùng
+        /// </summary>
+        NotExistUserName = 5,
     }
 }

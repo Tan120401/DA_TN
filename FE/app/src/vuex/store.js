@@ -8,6 +8,7 @@ const store = createStore({
     return {
       isLogin: false,
       userInfo: [],
+      cart: [],
     };
   },
   getters: {},
@@ -35,9 +36,18 @@ const store = createStore({
     },
     getUserById(state, payLoad) {
       if (payLoad) {
-        console.log(payLoad.data[0])
+        console.log(payLoad.data[0]);
         state.userInfo = payLoad.data[0];
         localStorage.setItem("userInfo", JSON.stringify(payLoad.data[0]));
+      }
+    },
+    addToCart(state, payLoad) {
+      if (payLoad != false) {
+        state.cart.push(payLoad);
+        localStorage.setItem("cart", JSON.stringify(state.cart));
+        console.log(state.cart);
+      } else {
+        state.cart = null;
       }
     },
     initializeStore(state) {
@@ -74,6 +84,9 @@ const store = createStore({
         commit("getUserById", false);
         console.log(err);
       }
+    },
+    addToCart({ commit }, param) {
+      commit("addToCart", param);
     },
     setLogout({ commit }) {
       commit("Logout");

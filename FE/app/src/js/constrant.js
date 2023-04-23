@@ -6,4 +6,15 @@ const formatter = new Intl.NumberFormat("vi-VN", {
   currency: "VND",
 });
 
-export  {formatter}
+const FILTER_CATEGORY = {
+  categoryId: null,
+  order: null,
+}
+const CART_OPTIONS = {
+  CartId: null,
+  ProductId: null,
+  UserId: null,
+  SizeProduct: null,
+  NumProduct: null
+}
+export  {formatter,FILTER_CATEGORY,CART_OPTIONS}

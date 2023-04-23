@@ -1,13 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "CxU8f0UOSCQpviSA2kXcT2BQJHx0YXL5l6oQVisXAXi/UNclwhOCtulF1njFPJq5oNepjOos1Y6Wfbbf/EIJOA==",
+  "dgSpecHash": "9sARJ1brHf63fPT7YaF8i/2FzRirngWTbd919zpQBh1QrjjdITDG+JCPr8DQSjYcp0IPwbq9YqYIulBQmQYIeQ==",
   "success": true,
   "projectFilePath": "D:\\DO_AN\\BE\\source-code\\NineStore.API\\NineStore.Common\\NineStore.Common.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\nguye\\.nuget\\packages\\bouncycastle.cryptography\\2.1.1\\bouncycastle.cryptography.2.1.1.nupkg.sha512",
+    "C:\\Users\\nguye\\.nuget\\packages\\mailkit\\4.0.0\\mailkit.4.0.0.nupkg.sha512",
     "C:\\Users\\nguye\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
     "C:\\Users\\nguye\\.nuget\\packages\\microsoft.extensions.primitives\\2.2.0\\microsoft.extensions.primitives.2.2.0.nupkg.sha512",
+    "C:\\Users\\nguye\\.nuget\\packages\\mimekit\\4.0.0\\mimekit.4.0.0.nupkg.sha512",
+    "C:\\Users\\nguye\\.nuget\\packages\\system.formats.asn1\\6.0.0\\system.formats.asn1.6.0.0.nupkg.sha512",
     "C:\\Users\\nguye\\.nuget\\packages\\system.memory\\4.5.1\\system.memory.4.5.1.nupkg.sha512",
-    "C:\\Users\\nguye\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.1\\system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512"
+    "C:\\Users\\nguye\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\nguye\\.nuget\\packages\\system.security.cryptography.pkcs\\6.0.2\\system.security.cryptography.pkcs.6.0.2.nupkg.sha512",
+    "C:\\Users\\nguye\\.nuget\\packages\\system.text.encoding.codepages\\6.0.0\\system.text.encoding.codepages.6.0.0.nupkg.sha512"
   ],
   "logs": []
 }

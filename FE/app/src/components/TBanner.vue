@@ -30,13 +30,13 @@
         </div>
         <div class="carousel-inner">
           <div class=" carousel-item active">
-            <img src="../assets/img/banner3.webp" class="d-block w-100 h-500" alt="..." />
+            <img src="../assets/img/banner3.webp" class="d-block w-100 h-300" alt="..." />
           </div>
           <div class="carousel-item">
-            <img src="../assets/img/banner2.webp" class="d-block w-100 h-500" alt="..." />
+            <img src="../assets/img/banner2.webp" class="d-block w-100 h-300" alt="..." />
           </div>
           <div class="carousel-item">
-            <img src="../assets/img/banner1.webp" class="d-block w-100 h-500" alt="..." />
+            <img src="../assets/img/banner1.webp" class="d-block w-100 h-300" alt="..." />
           </div>
         </div>
         <button
@@ -69,7 +69,7 @@ export default {
 </script>
 
 <style>
-.h-500{
-  height: 500px;
+.h-300{
+  height: 300px;
 }
 </style>

@@ -37,7 +37,8 @@ namespace NineStore.API.Controllers
         /// </summary>
         /// <returns>Danh sách record</returns>
         /// Created by: NVTan (09/02/2023)
-        [HttpGet,Authorize(Roles = "admin")]
+        /*[HttpGet,Authorize(Roles = "admin")]*/
+        [HttpGet]
         public IActionResult GetAllRecord()
         {
             try

@@ -13,7 +13,7 @@ namespace NineStore.DL.UserDL
 {
     public class UserDL : BaseDL<UserRequest>, IUserDL
     {
-        public int CheckUserName(string userName,Guid? userId)
+        public int CheckUserName(string userName, Guid? userId)
         {
             string storedProcedureName = "Proc_Check_UserName";
 
@@ -22,8 +22,8 @@ namespace NineStore.DL.UserDL
             parameters.Add("p_UserId", userId);
 
             int result;
-            
-            using(var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
+
+            using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
             {
                 var mult = mySqlConnection.QueryMultiple(storedProcedureName, parameters, commandType: System.Data.CommandType.StoredProcedure);
 
@@ -33,6 +33,37 @@ namespace NineStore.DL.UserDL
             return result;
 
         }
+
+
+        /// <summary>
+        /// Sửa thông tin bản ghi
+        /// </summary>
+        /// <param name="email">bản ghi muốn sửa</param>
+        /// <returns>
+        /// 1: Nếu update thành công
+        /// 0: Nếu update thất bại
+        /// </returns>
+        /// Created by: NVTan (09/02/2023)
+        public int ForgotPassword(string userName,string newPassword)
+        {
+            // procedurename
+            string storedProcedureName = "Proc_User_ForgotPassword";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("p_UserName", userName);
+            parameters.Add("p_NewPassword", newPassword);
+            int numberOfRowsAffect;
+
+            // Khởi tạo kết nối DB
+            using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
+            {
+                // Gọi proc
+                numberOfRowsAffect = mySqlConnection.Execute(storedProcedureName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                return numberOfRowsAffect;
+            }
+        }
+
+        
 
         public List<UserRequest> LoginResult(UserRequest request)
         {
@@ -49,10 +80,10 @@ namespace NineStore.DL.UserDL
 
             dynamic result;
 
-            using(var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
+            using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
             {
                 // Gọi vào DB
-                var multy = mySqlConnection.QueryMultiple(storedProcedureName, parameters,commandType: System.Data.CommandType.StoredProcedure);
+                var multy = mySqlConnection.QueryMultiple(storedProcedureName, parameters, commandType: System.Data.CommandType.StoredProcedure);
 
                 result = multy.Read<UserRequest>().ToList();
             }

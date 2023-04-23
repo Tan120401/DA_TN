@@ -22,7 +22,7 @@ namespace NineStore.DL.BaseDL
         /// </summary>
         /// <returns>Danh sách record</returns>
         /// Created by: NVTan (09/02/2023)
-        public List<T> GetAllRecord()
+        public virtual List<T> GetAllRecord()
         {
             //Chuẩn bị tên stored procedure
             string storedProcedureName = String.Format(ProcedureName.Get, typeof(T).Name, "All");

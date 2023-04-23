@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <THeader></THeader>
-    <div id="content">
+    <div id="content" v-if="!isLoading">
       <div class="product__detail-title">
         <router-link :to="{ name: 'Home' }"
           ><span class="product__detail-title-text"
@@ -14,23 +14,37 @@
       </div>
       <div class="product__detail-content">
         <div class="product__detail-left">
-          <img :src="require(`@/assets/img/${pictureHighlight}`)" alt="" />
+          <img
+            :src="require(`@/assets/img/product/${pictureHighlight}`)"
+            alt=""
+          />
           <div class="product__detail-smallpic">
             <img
-              :src="require(`../assets/img/${item}`)"
+              :src="require(`../assets/img/product/${item.ImageLink}`)"
               alt=""
               v-for="(item, index) in imageOptions"
               :key="index"
-              @click="selectedImage(item)"
+              @click="selectedImage(item.ImageLink)"
             />
           </div>
         </div>
         <div class="product__detail-right">
-          <h1 class="product__detail-name">NIKE AIR FORCE</h1>
+          <h1 class="product__detail-name">
+            {{ productDetail.ProductName }}
+          </h1>
           <div class="product__detail-price">
-            <h4 class="price">{{ formatter.format(1000000) }}</h4>
-            <h4 class="price-discount">{{ formatter.format(900000) }}</h4>
-            <h4 class="price-sale">Sale: 10%</h4>
+            <h4 class="price-discount">
+              {{
+                formatter.format(
+                  (productDetail.Price * (100 - productDetail.Discount)) / 100
+                )
+              }}
+            </h4>
+            <h4 class="product__price-discount">
+              {{ formatter.format(productDetail.Price) }}
+            </h4>
+
+            <h4 class="price-sale">Sale: {{ productDetail.Discount }}%</h4>
           </div>
           <h4>Kích thước giày:</h4>
           <div class="product__detail-size">
@@ -39,12 +53,18 @@
               v-for="(item, index) in sizeOptions"
               :key="index"
               :class="{
-                'product__detail-size-item--active': item == isSizeItem,
+                'product__detail-size-item--active':
+                  item.SizeNumber == sizeProduct,
               }"
               @click="selectedSize(item)"
             >
-              {{ item }}
+              {{ item.SizeNumber }}
             </div>
+          </div>
+          <div style="position: relative">
+            <span class="product-fail" v-if="isSizeItem"
+              >Vui lòng chọn size giày</span
+            >
           </div>
           <h4>Số lượng:</h4>
           <div class="product__detail-num">
@@ -52,28 +72,32 @@
               class="fa-solid fa-minus product__detail-remove"
               @click="removeProduct"
             ></i>
-            <div class="number">{{ numProduct }}</div>
+            <input type="text" class="number" v-model="numProduct" />
             <i
               class="fa-solid fa-plus product__detail-add"
               @click="addProduct"
             ></i>
           </div>
-          <div class="product__detail-options">
-            <router-link to="Cart/"
-              ><div class="add-to-card tbutton">
-                <i class="fa-solid fa-cart-shopping"></i>Thêm vào giỏ hàng
-              </div></router-link
+          <div style="position: relative">
+            <span class="numproduct-fail" v-if="isOverloadNumProduct"
+              >Số lượng lớn hơn số còn lại.</span
             >
-            <router-link :to= "{name: 'Pay'}"><div class="tbutton buy-now">Mua ngay</div></router-link>
+          </div>
+          <div class="product__detail-options">
+            <!-- <router-link to="Cart/"> -->
+            <div class="add-to-card tbutton" @click="addToCart()">
+              <i class="fa-solid fa-cart-shopping"></i>Thêm vào giỏ hàng
+            </div>
+            <!-- </router-link> -->
+            <router-link :to="{ name: 'Pay' }"
+              ><div class="tbutton buy-now">Mua ngay</div></router-link
+            >
           </div>
         </div>
       </div>
       <div class="product__detail-descriptions">
         <h3>Chi tiết sản phẩm</h3>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim debitis a
-        ad fugit nesciunt eos explicabo placeat eligendi error cumque facere,
-        reprehenderit quasi, nisi veniam harum ratione recusandae. Mollitia,
-        eius!
+        {{ productDetail.Description }}
       </div>
       <div class="product__detail-evaluate">
         <h3>Đánh giá</h3>
@@ -93,10 +117,20 @@
 
 <script>
 import { useRoute } from "vue-router";
+import { reactive, ref, watchEffect, watch, computed } from "vue";
 
 import THeader from "@/layout/THeader.vue";
 import TFooter from "@/layout/TFooter.vue";
-import { reactive, ref } from "vue";
+
+import AXIOS_PRODUCT from "@/api/Product";
+import AXIOS_SIZE from "@/api/size";
+import AXIOS_IMAGE from "@/api/image";
+import { CART_OPTIONS } from "@/js/constrant";
+import AXIOS_CART from "@/api/cart";
+
+import router from "@/router/router";
+import { useStore } from "vuex";
+import _ from "lodash";
 export default {
   name: "TProductdetail",
   components: {
@@ -105,17 +139,64 @@ export default {
   },
   setup() {
     const route = useRoute();
-    const sizeOptions = reactive([38, 39, 40, 41, 42]);
-    const imageOptions = reactive([
-      "1.1nike.png",
-      "1.2nike.png",
-      "1.3nike.png",
-      "1.4nike.png",
-    ]);
-    const isSizeItem = ref();
+    const store = useStore();
+    const sizeOptions = ref();
+    const imageOptions = ref();
+    const sizeProduct = ref();
     const numProduct = ref(1);
-    const pictureHighlight = ref("1.1nike.png");
+    const pictureHighlight = ref();
+    const productDetail = ref();
+    const cartOptions = reactive(_.cloneDeep(CART_OPTIONS));
+    const isLoading = ref(true);
+    const isSizeItem = ref();
+    /**
+     * Hàm lấy thông tin sản phẩm thông qua id
+     * @param {Id product} param
+     */
+    const getProductById = async (param) => {
+      try {
+        let response = await AXIOS_PRODUCT.getProductById(param);
+        if (response) {
+          isLoading.value = true;
+          productDetail.value = response.data[0];
+          pictureHighlight.value = response.data[0].ImgProduct;
+          isLoading.value = false;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getProductById(route.params.id);
 
+    /**
+     * Hàm lấy size của sản phẩm
+     */
+    const getAllSizeProduct = async (param) => {
+      try {
+        let response = await AXIOS_SIZE.getSizeByProductId(param);
+        if (response) {
+          sizeOptions.value = response.data;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getAllSizeProduct(route.params.id);
+
+    /**
+     * Hàm lấy size của sản phẩm
+     */
+    const getALLImageProduct = async (param) => {
+      try {
+        let response = await AXIOS_IMAGE.getImageByProductId(param);
+        if (response) {
+          imageOptions.value = response.data;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getALLImageProduct(route.params.id);
     /**
      * Hàm chọn size
      */
@@ -127,8 +208,7 @@ export default {
      */
     const selectedSize = (value) => {
       if (value) {
-        console.log(value);
-        isSizeItem.value = value;
+        sizeProduct.value = value.SizeNumber;
       }
     };
 
@@ -136,16 +216,70 @@ export default {
      * Hàm thêm số lượng
      */
     const addProduct = () => {
+      if (typeof numProduct.value == "string") {
+        numProduct.value = parseInt(numProduct.value);
+      }
       numProduct.value += 1;
     };
     /**
      * Hàm bớt số lượng
      */
     const removeProduct = () => {
+      if (typeof numProduct.value == "string") {
+        numProduct.value = parseInt(numProduct.value);
+      }
       if (numProduct.value > 1) {
         numProduct.value -= 1;
       }
     };
+    /**
+     * Hàm theo dõi có chọn size hay không
+     */
+    watch(sizeProduct, (newVal) => {
+      if (newVal) {
+        isSizeItem.value = false;
+      }
+    });
+    /**
+     * Hàm theo dõi số lượng mua
+     */
+    const isOverloadNumProduct = computed(() => {
+      return numProduct.value
+        ? parseInt(numProduct.value) > productDetail.value.Quantity
+        : false;
+    });
+
+    const insertToCart = async (params) => {
+      try {
+        let response = await AXIOS_CART.insertCart(params);
+        if (response) {
+          console.log(response);
+          router.push({
+            path: `/Cart`,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    /**
+     * Hàm thêm sản phẩm vào giỏ hàng
+     */
+    const addToCart = () => {
+      if (!sizeProduct.value) {
+        isSizeItem.value = true;
+      }
+      if (isSizeItem.value || isOverloadNumProduct.value) {
+        return;
+      } else {
+        cartOptions.UserId = store.state.userInfo.UserId;
+        cartOptions.ProductId = route.params.id;
+        cartOptions.SizeProduct = sizeProduct.value;
+        cartOptions.NumProduct = numProduct.value;
+        insertToCart(cartOptions);
+      }
+    };
+
     /**
      * Định dạng tiền tệ VND
      */
@@ -154,21 +288,49 @@ export default {
       currency: "VND",
     });
     return {
+      isOverloadNumProduct,
+      store,
+      addToCart,
+      isLoading,
+      productDetail,
       route,
       sizeOptions,
+      sizeProduct,
       isSizeItem,
-      selectedSize,
       imageOptions,
       pictureHighlight,
       selectedImage,
       numProduct,
+      selectedSize,
       addProduct,
+      getProductById,
       removeProduct,
+      getAllSizeProduct,
+      getALLImageProduct,
+      cartOptions,
       formatter,
+      insertToCart,
     };
   },
 };
 </script>
 
 <style>
+.product-fail,
+.numproduct-fail {
+  position: absolute;
+  top: -20px;
+  font-size: 14px;
+  color: red;
+  font-style: italic;
+}
+.numproduct-fail {
+  top: 6px;
+}
+.number {
+  width: 40px;
+  display: flex;
+  text-align: center;
+  border: 1px solid transparent;
+}
 </style>

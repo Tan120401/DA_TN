@@ -8,16 +8,14 @@
         <router-link :class="{ active: $route.name == 'Home' }" to="/"
           ><li>Trang chủ</li></router-link
         >
-        <router-link :class="{ active: $route.name == 'About' }" to="/About"
-          ><li>Sản phẩm</li></router-link
+        <router-link
+          v-for="(item, index) in lstCategory"
+          :key="index"
+          :class="{ active: $route.path == `/Category/${item.CategoryId}` }"
+          :to="`/Category/${item.CategoryId}`"
+          ><li>{{ item.CategoryName }}</li></router-link
         >
-        <router-link :class="{ active: $route.name == 'About' }" to="/"
-          ><li>Thông tin</li></router-link
-        >
-        <router-link :class="{ active: $route.name == 'About' }" to="/"
-          ><li>Đánh giá</li></router-link
-        >
-        <router-link :class="{ active: $route.name == 'About' }" to="/"
+        <router-link :class="{ active: $route.name == 'Contact' }" to="/"
           ><li>Liên hệ</li></router-link
         >
       </ul>
@@ -42,11 +40,13 @@
             aria-expanded="false"
           >
             <strong class="me-2"
-              >Hi! {{ $store.state.userInfo.UserName }}</strong
+              >Hi! {{ $store.state.userInfo.FullName }}</strong
             >
             <img
               :src="
-                require(`../assets/img/user/${$store.state.userInfo.ImgName}`)
+                require(`../assets/img/user/${
+                  $store.state.userInfo.ImgName || 'avatar-null.jpeg'
+                }`)
               "
               alt="mdo"
               width="32"
@@ -64,7 +64,11 @@
                 <a class="dropdown-item" href="#">Thông tin cá nhân</a>
               </li></router-link
             >
-            <li><a class="dropdown-item" href="#">Giỏ hàng của tôi</a></li>
+            <router-link :to="`/Cart`"
+              ><li>
+                <a class="dropdown-item" href="#">Giỏ hàng của tôi</a>
+              </li></router-link
+            >
             <router-link to="/HomeAdmin"
               ><li>
                 <a
@@ -89,6 +93,9 @@
 <script>
 import router from "@/router/router";
 import { useStore } from "vuex";
+
+import AXIOS_CATEGORY from "@/api/category";
+import { ref } from "vue";
 export default {
   setup() {
     const $store = useStore();
@@ -96,10 +103,22 @@ export default {
       $store.dispatch("setLogout");
       router.push({ path: "/" });
     };
-
-    console.log($store.state.userInfo.UserId);
+    const lstCategory = ref([]);
+    const getAllCategory = async () => {
+      try {
+        let response = await AXIOS_CATEGORY.getAllCategory();
+        if (response) {
+          lstCategory.value = response.data;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getAllCategory();
     return {
       logout,
+      lstCategory,
+      getAllCategory,
     };
   },
 };

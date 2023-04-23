@@ -24,5 +24,14 @@ namespace NineStore.DL.UserDL
         /// <returns>1: nếu đã trùng</returns>
         int CheckUserName(string userName, Guid? userId);
 
+        /// Sửa thông tin bản ghi
+        /// </summary>
+        /// <param name="email">bản ghi muốn sửa</param>
+        /// <returns>
+        /// 1: Nếu sửa thành công
+        /// 0: Nếu sửa thất bại
+        /// </returns>
+        /// Created by: NVTan (09/02/2023)
+        int ForgotPassword(string userName, string newPassword);
     }
 }

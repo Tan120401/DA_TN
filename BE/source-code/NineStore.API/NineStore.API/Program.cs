@@ -8,6 +8,18 @@ using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using NineStore.API.Services;
+using NineStore.BL.CategoryBL;
+using NineStore.DL.CategoryDL;
+using NineStore.BL.ProductBL;
+using NineStore.DL.ProductDL;
+using NineStore.Common.Entities;
+using NineStore.BL.SizeBL;
+using NineStore.DL.SizeDL;
+using NineStore.BL.ImageProductBL;
+using NineStore.DL.ImageProductDL;
+using NineStore.BL.CartBL;
+using NineStore.DL.CartDL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +67,23 @@ builder.Services.AddScoped(typeof(IBaseDL<>), typeof(BaseDL<>));
 
 builder.Services.AddScoped<IUserBL, UserBL>();
 builder.Services.AddScoped<IUserDL, UserDL>();
+
+builder.Services.AddScoped<IProductBL, ProductBL>();
+builder.Services.AddScoped<IProductDL, ProductDL>();
+
+builder.Services.AddScoped<ICategoryBL, CategoryBL>();
+builder.Services.AddScoped<ICategoryDL, CategoryDL>();
+
+builder.Services.AddScoped<ISizeBL, SizeBL>();
+builder.Services.AddScoped<ISizeDL, SizeDL>();
+
+builder.Services.AddScoped<IImageProductBL, ImageProductBL>();
+builder.Services.AddScoped<IImageProductDL, ImageProductDL>();
+
+builder.Services.AddScoped<ICartBL, CartBL>();
+builder.Services.AddScoped<ICartDL, CartDL>();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Convert output to pascalcase
 builder.Services.AddControllers()

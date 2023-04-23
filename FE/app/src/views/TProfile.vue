@@ -34,10 +34,6 @@
                     <hr class="mt-0 mb-4" />
                     <div class="row pt-1">
                       <div class="col-6 mb-3">
-                        <h6>Email</h6>
-                        <p class="text-muted">{{ userInfo.Email }}</p>
-                      </div>
-                      <div class="col-6 mb-3">
                         <h6>Họ và tên</h6>
                         <p class="text-muted">{{ userInfo.FullName }}</p>
                       </div>
@@ -59,19 +55,15 @@
       </div>
     </section>
     <div class="modal1" v-if="isShowFormEdit">
-      <form id="form-control" @submit.prevent="onUpdateProfile">
+      <form
+        id="form-control"
+        @submit.prevent="onUpdateProfile"
+        ref="validateForm"
+      >
         <div class="form__header">
           <h2>Thông tin cá nhân</h2>
         </div>
         <i class="fa-solid fa-xmark t-icon-close" @click="onHideFormEdit"></i>
-        <label class="mb-2" for="">Email</label>
-        <TInput
-          type="text"
-          placeholder="Email"
-          name="Email"
-          :rules="['Empty']"
-          v-model="userInfor.Email"
-        ></TInput>
         <label class="mb-2" for="">Họ và Tên</label>
         <TInput
           type="text"
@@ -85,15 +77,20 @@
           type="text"
           placeholder="Tên đăng nhập"
           name="Tên đăng nhập"
-          :rules="['Empty']"
+          :rules="['Email']"
           v-model="userInfor.UserName"
         ></TInput>
+        <div style="position: relative">
+          <span class="register-fail" v-if="isShowDuplicateUser"
+            >Tên đăng nhập đã tồn tại</span
+          >
+        </div>
         <label class="mb-2" for="">Mật khẩu</label>
         <TInput
           type="text"
           placeholder="Mật khẩu"
           name="Mật khẩu"
-          :rules="['Empty']"
+          :rules="['Password']"
           v-model="userInfor.PassWord"
         ></TInput>
         <label class="mb-2" for="">Avatar</label>
@@ -127,6 +124,9 @@ import _ from "lodash";
 import { reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+
+import { validateData } from "@/js/validateion";
+
 export default {
   name: "TProfile",
   components: {
@@ -135,6 +135,8 @@ export default {
     TInput,
   },
   setup() {
+    const validateForm = ref(null);
+    const isShowDuplicateUser = ref(false);
     const $store = useStore();
     const url = ref();
     const userInfo = ref([]);
@@ -197,24 +199,33 @@ export default {
      * Created by NVTAN(10/04/2023)
      */
     const onUpdateProfile = async () => {
-      try {
-        if (fileChange.FileName != null) {
-          userInfor.value.ImgName = fileChange.FileName;
-        }
-        let response = await USER_AXIOS.updateUser(
-          route.params.id,
-          userInfor.value
-        );
-        if (response) {
-          if (fileChange.FileName != null && fileChange.File != null) {
-            await uploadFile(fileChange);
+      var lstInput = validateForm.value.querySelectorAll("input");
+      var inValid = validateData(lstInput);
+      if (inValid.isValidate) {
+        try {
+          if (fileChange.FileName != null) {
+            userInfor.value.ImgName = fileChange.FileName;
           }
-          getUserByIdAfterUpdate(route.params.id);
-          getUserInfor(route.params.id);
-          onHideFormEdit();
+          let response = await USER_AXIOS.updateUser(
+            route.params.id,
+            userInfor.value
+          );
+          if (response) {
+            if (fileChange.FileName != null && fileChange.File != null) {
+              await uploadFile(fileChange);
+            }
+            getUserByIdAfterUpdate(route.params.id);
+            getUserInfor(route.params.id);
+            onHideFormEdit();
+          }
+        } catch (err) {
+          console.log(err);
+          if (err.response.data.ErrorCode == 4) {
+            isShowDuplicateUser.value = true;
+          } else {
+            isShowDuplicateUser.value = false;
+          }
         }
-      } catch (err) {
-        console.log(err);
       }
     };
     /**
@@ -241,6 +252,8 @@ export default {
     };
 
     return {
+      validateForm,
+      isShowDuplicateUser,
       $store,
       url,
       onChoseFile,

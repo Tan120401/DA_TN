@@ -102,3 +102,8 @@ D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\Scrutor.dll
 D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
 D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
 D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\MailKit.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\MimeKit.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\DO_AN\BE\source-code\NineStore.API\NineStore.API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll

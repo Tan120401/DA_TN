@@ -1,8 +1,6 @@
 <template>
   <div id="main">
     <THeader></THeader>
-    <!-- <h1>Home</h1>
-  <router-link :to="{ name: 'about' }">about</router-link> -->
     <TContent></TContent>
     <TFooter></TFooter>
   </div>

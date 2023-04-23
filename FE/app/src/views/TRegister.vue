@@ -12,16 +12,9 @@
           <h1 class="login-title">Đăng ký tài khoản</h1>
           <TInput
             type="text"
-            placeholder="Email"
-            v-model="userRegister.Email"
-            name="Email"
-            :rules="['Empty', 'Email']"
-          ></TInput>
-          <TInput
-            type="text"
             placeholder="Họ và tên"
             v-model="userRegister.FullName"
-            name="Tên đăng nhập"
+            name="Họ và tên"
             :rules="['Empty']"
           ></TInput>
           <TInput
@@ -29,7 +22,7 @@
             placeholder="Tên đăng nhập"
             v-model="userRegister.UserName"
             name="Tên đăng nhập"
-            :rules="['Empty']"
+            :rules="['Email']"
           ></TInput>
           <div style="position: relative">
             <span class="register-fail" v-if="isShowDuplicateUser"
@@ -42,7 +35,7 @@
             placeholder="Mật khẩu"
             v-model="userRegister.Password"
             name="Mật khẩu"
-            :rules="['Empty']"
+            :rules="['Password']"
           ></TInput>
           <TInput
             type="password"
@@ -82,10 +75,12 @@ import TInput from "@/components/TInput.vue";
 import { USER, USER_REGISTER } from "@/js/data";
 import USER_AXIOS from "@/api/user";
 import { reactive, ref, watch } from "vue";
+
 import { useStore } from "vuex";
 import _ from "lodash";
 import router from "@/router/router";
 
+import { validateData } from "@/js/validateion";
 export default {
   name: "TRegister",
   components: {
@@ -104,7 +99,8 @@ export default {
      * Created by NVTAN(04/04/2023)
      */
     const onRegister = async () => {
-      var inValid = validateData();
+      var lstInput = validateForm.value.querySelectorAll("input");
+      var inValid = validateData(lstInput);
       if (inValid.isValidate) {
         if (confirmPassword.value != userRegister.Password) {
           isConfirmPassError.value = true;
@@ -128,81 +124,6 @@ export default {
     };
 
     /**
-     * Hàm validate dữ liệu
-     * Created by NVTAN(04/04/2023)
-     */
-    const validateData = () => {
-      var isValidate = true;
-      var lstInput = validateForm.value.querySelectorAll("input");
-      if (lstInput) {
-        for (var i = 0; i < lstInput.length; i++) {
-          var component = lstInput[i].__vueParentComponent;
-          if (component.props.rules) {
-            let validate = validateInput(lstInput[i]);
-            if (validate) {
-              isValidate = false;
-            }
-          }
-        }
-      }
-      return {
-        isValidate: isValidate,
-      };
-    };
-    /**
-     * Hàm validate ô input
-     * Created by NVTAN(04/04/2023)
-     */
-    const validateInput = (input) => {
-      var component = input.__vueParentComponent;
-      // Lấy ra danh sách prop
-      var props = component.props;
-      var setup = component.setupState;
-      // Lấy ra danh sách validate
-      var rules = props.rules;
-      var name = props.name;
-      var val = input.value;
-      let inValid = true;
-      if (rules && rules.length) {
-        for (var i = 0; i < rules.length; i++) {
-          if (rules[i] == "Empty") {
-            if (!val || val.trim() == "") {
-              setup.isValidate = true;
-              setup.messageValidate = name + " không được để trống.";
-              inValid = true;
-            } else {
-              inValid = false;
-            }
-          } else if (rules[i] == "Email") {
-            const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (val && !val.match(regexEmail)) {
-              setup.isValidate = true;
-              setup.messageValidate = name + " không đúng định dạng.";
-              inValid = true;
-            } else {
-              inValid = false;
-            }
-          }
-          return inValid;
-          // else if (rules[i] == "Number") {
-          //   const regexNumber = /^\d+$/;
-          //   if (val && !val.match(regexNumber)) {
-          //     setup.isEmpty = true;
-          //     setup.validateError = name + " không đúng định dạng.";
-          //     return {
-          //       isValid: false,
-          //       textValidate: setup.validateError,
-          //     };
-          //   } else {
-          //     return {
-          //       isValid: true,
-          //     };
-          //   }
-          // }
-        }
-      }
-    };
-    /**
      * Hàm chọn chấp nhận điều khoản
      * Created by NVTAN (30/03/2023)
      */
@@ -217,8 +138,6 @@ export default {
       validateForm,
       confirmPassword,
       isConfirmPassError,
-      validateData,
-      validateInput,
       onAccept,
       onRegister,
     };
