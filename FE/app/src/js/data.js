@@ -1,87 +1,3 @@
-const PRODUCTS = [
-  {
-    id: 1,
-    picture: "1.1nike.png",
-    picture2: "1.2nike.png",
-    picture3: "1.3nike.png",
-    picture4: "1.4nike.png",
-    productname: "Nike",
-    price: 1000000,
-    pricediscount: 900000,
-  },
-  {
-    id: 2,
-    picture: "2.1nike.png",
-    picture2: "2.2nike.png",
-    picture3: "2.3nike.png",
-    picture4: "2.4nike.png",
-    productname: "Nike",
-    price: 1000000,
-    pricediscount: 800000,
-  },
-  {
-    id: 3,
-    picture: "3.1nike.png",
-    productname: "Nike",
-    price: 1000000,
-    pricediscount: 900000,
-  },
-  {
-    id: 4,
-    picture: "4.1nike.png",
-    productname: "Nike",
-    price: 1000000,
-    pricediscount: 900000,
-  },
-  {
-    id: 5,
-    picture: "5.1nike.png",
-    productname: "Nike",
-    price: 1000000,
-    pricediscount: 900000,
-  },
-  {
-    id: 6,
-    picture: "6.1nike.png",
-    productname: "Nike",
-    price: 1000000,
-    pricediscount: 900000,
-  },
-  {
-    id: 7,
-    picture: "7.1nike.png",
-    productname: "Nike",
-    price: 1000000,
-    pricediscount: 900000,
-  },
-  {
-    id: 8,
-    picture: "9.1nike.png",
-    productname: "Nike",
-    price: 1000000,
-    pricediscount: 900000,
-  },
-];
-const PRODUCTS_CART = [
-  {
-    id: 1,
-    picture: "1.1nike.png",
-    productname: "Nike",
-    numproduct: 1,
-    size: 39,
-    price: 1000000,
-    pricediscount: 900000,
-  },
-  {
-    id: 2,
-    picture: "2.1nike.png",
-    productname: "Nike2",
-    size: 40,
-    numproduct: 1,
-    price: 1000000,
-    pricediscount: 800000,
-  },
-];
 const NEWS = [
   {
     newpic:
@@ -117,6 +33,7 @@ const USER = {
 };
 
 const USER_REGISTER = {
+  UserId: null,
   FullName: "",
   Role: "user",
   UserName: "",
@@ -126,6 +43,16 @@ const USER_REGISTER = {
 const FILE_OPTIONS = {
   FileName: null,
   File: null,
-}
+};
 
-export { PRODUCTS, NEWS, PRODUCTS_CART, USER, USER_REGISTER,FILE_OPTIONS };
+const PRODUCT_OPTION = {
+  ProductId: null,
+  ProductName: null,
+  Status: 1,
+  Price: null,
+  Discount: null,
+  ImgProduct: null,
+  CategoryId: '142cb08f-7c31-21fa-8e90-67245e8b283e'
+};
+
+export { PRODUCT_OPTION, NEWS, USER, USER_REGISTER, FILE_OPTIONS };

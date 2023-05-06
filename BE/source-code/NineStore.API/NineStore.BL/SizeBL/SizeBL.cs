@@ -24,5 +24,16 @@ namespace NineStore.BL.SizeBL
             _sizeDL = sizeDL;
         }
 
+        public List<Size> GetSizeByProductId(Guid recordId)
+        {
+            List<Size> results = _sizeDL.GetSizeByProductId(recordId);
+            return results;
+        }
+
+        public int InsertMupltySize(List<Size> Sizes)
+        {
+            int numAffectedRows = _sizeDL.InsertMupltySize(Sizes);
+            return numAffectedRows;
+        }
     }
 }

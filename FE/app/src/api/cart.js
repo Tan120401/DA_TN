@@ -9,6 +9,14 @@ const AXIOS_CART = {
   async insertCart(params) {
     return await axios.post(API, params);
   },
+  async deleteCartById(param) {
+    return await axios.delete(`${API}/${param}`);
+  },
+  async deleteMulptyCart(params) {
+    return await axios.delete(`${API}/delete-mulpty`, {
+      data: params,
+    });
+  },
 };
 
 export default AXIOS_CART;

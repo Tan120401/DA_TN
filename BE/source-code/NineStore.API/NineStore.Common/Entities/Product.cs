@@ -17,9 +17,8 @@ namespace NineStore.Common.Entities
         public ProductStatus? Status { get; set; }
         public int? Quantity { get; set; }
         public double? Price { get; set; }
-
         public float? Discount { get; set; }
-
+        public string? CategoryName { get; set; }
         public string? Description { get; set; }
         public string? ImgProduct { get; set; }
         public DateTime? CreatedDate { get; set; }

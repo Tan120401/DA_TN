@@ -20,6 +20,12 @@ using NineStore.BL.ImageProductBL;
 using NineStore.DL.ImageProductDL;
 using NineStore.BL.CartBL;
 using NineStore.DL.CartDL;
+using NineStore.BL.OrderBL;
+using NineStore.DL.OrderDL;
+using NineStore.BL.OrderDetailBL;
+using NineStore.DL.OrderDetailDL;
+using NineStore.BL.BillBL;
+using NineStore.DL.BillDL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +88,15 @@ builder.Services.AddScoped<IImageProductDL, ImageProductDL>();
 
 builder.Services.AddScoped<ICartBL, CartBL>();
 builder.Services.AddScoped<ICartDL, CartDL>();
+
+builder.Services.AddScoped<IOrderBL, OrderBL>();
+builder.Services.AddScoped<IOrderDL, OrderDL>();
+
+builder.Services.AddScoped<IOrderDetailBL, OrderDetailBL>();
+builder.Services.AddScoped<IOrderDetailDL, OrderDetailDL>();
+
+builder.Services.AddScoped<IBillBL, BillBL>();
+builder.Services.AddScoped<IBillDL, BillDL>();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 

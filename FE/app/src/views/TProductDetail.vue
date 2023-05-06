@@ -47,7 +47,7 @@
             <h4 class="price-sale">Sale: {{ productDetail.Discount }}%</h4>
           </div>
           <h4>Kích thước giày:</h4>
-          <div class="product__detail-size">
+          <div class="product__detail-size d-flex align-items-center">
             <div
               class="product__detail-size-item"
               v-for="(item, index) in sizeOptions"
@@ -60,6 +60,7 @@
             >
               {{ item.SizeNumber }}
             </div>
+            <h6 v-if="quantityBySize">Số lượng: {{ quantityBySize }}</h6>
           </div>
           <div style="position: relative">
             <span class="product-fail" v-if="isSizeItem"
@@ -149,6 +150,8 @@ export default {
     const cartOptions = reactive(_.cloneDeep(CART_OPTIONS));
     const isLoading = ref(true);
     const isSizeItem = ref();
+    const sizeSelected = ref([]);
+    const quantityBySize = ref();
     /**
      * Hàm lấy thông tin sản phẩm thông qua id
      * @param {Id product} param
@@ -209,6 +212,8 @@ export default {
     const selectedSize = (value) => {
       if (value) {
         sizeProduct.value = value.SizeNumber;
+        quantityBySize.value = value.Quantity;
+        sizeSelected.value = value;
       }
     };
 
@@ -244,16 +249,17 @@ export default {
      * Hàm theo dõi số lượng mua
      */
     const isOverloadNumProduct = computed(() => {
-      return numProduct.value
-        ? parseInt(numProduct.value) > productDetail.value.Quantity
-        : false;
+      if (quantityBySize.value) {
+        return numProduct.value
+          ? parseInt(numProduct.value) > quantityBySize.value
+          : false;
+      }
     });
 
     const insertToCart = async (params) => {
       try {
         let response = await AXIOS_CART.insertCart(params);
         if (response) {
-          console.log(response);
           router.push({
             path: `/Cart`,
           });
@@ -288,6 +294,8 @@ export default {
       currency: "VND",
     });
     return {
+      sizeSelected,
+      quantityBySize,
       isOverloadNumProduct,
       store,
       addToCart,

@@ -69,7 +69,12 @@
                 <a class="dropdown-item" href="#">Giỏ hàng của tôi</a>
               </li></router-link
             >
-            <router-link to="/HomeAdmin"
+            <router-link :to="`/Order/0`"
+              ><li>
+                <a class="dropdown-item" href="#">Đơn hàng của tôi</a>
+              </li></router-link
+            >
+            <router-link to="/Admin/Home"
               ><li>
                 <a
                   class="dropdown-item"

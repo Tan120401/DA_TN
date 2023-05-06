@@ -10,6 +10,8 @@ namespace NineStore.BL.SizeBL
 {
     public interface ISizeBL : IBaseBL<Size>
     {
-        
+        public int InsertMupltySize(List<Size> Sizes);
+        public List<Size> GetSizeByProductId(Guid recordId);
+
     }
 }

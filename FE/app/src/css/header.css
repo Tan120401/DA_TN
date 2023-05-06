@@ -1,5 +1,6 @@
 #header  nav {
   width: 100%;
+  height: 56px;
   padding: 0 24px;
   display: flex;
   align-items: center;
@@ -25,7 +26,6 @@
   margin: 0;
 }
 #header nav .header__nav a{
-  height: 48px;
 }
 #header nav .header__nav li {
   display: inline-block;
@@ -36,8 +36,8 @@
 #header .active {
   font-weight: 700;
   border-bottom: 4px solid var(--primary-color);
-  padding-bottom: 15px;
-  color: var(--primary-color);
+  padding-bottom: 16px;
+  color: var(--primary-color) !important;
 }
 
 #header nav .header__nav li a {

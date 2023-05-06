@@ -9,9 +9,14 @@ import TLogin from "@/views/TLogin";
 import TRegister from "@/views/TRegister";
 import TProfile from "@/views/TProfile";
 import TCategory from "@/views/TCategory";
+import TOrder from "@/views/TOrder";
 
 import THomeAdmin from "@/views/admin/THomeAdmin";
 import TCustomerAdmin from "@/views/admin/TCustomerAdmin";
+import TOrderAdmin from "@/views/admin/TOrderAdmin";
+import TProductAdmin from "@/views/admin/TProductAdmin";
+import TReportAdmin from "@/views/admin/TProductAdmin";
+import TAdmin from "@/views/admin/TAdmin";
 // import TProductAdmin from "@/views/admin/TProductAdmin"
 const routes = [
   {
@@ -60,25 +65,48 @@ const routes = [
     component: TPay,
   },
   {
+    path: "/Order/:id",
+    name: "Order",
+    component: TOrder,
+  },
+
+  {
     path: "/Category/:id",
     name: "Category",
     component: TCategory,
   },
   {
-    path: "/HomeAdmin",
-    name: "HomeAdmin",
-    component: THomeAdmin,
+    path: "/Admin",
+    name: "Admin",
+    component: TAdmin,
+    children: [
+      {
+        path: "Home",
+        name: "HomeAdmin",
+        component: THomeAdmin,
+      },
+      {
+        path: "Customer",
+        name: "CustomerAdmin",
+        component: TCustomerAdmin,
+      },
+      {
+        path: "Order",
+        name: "OrderAdmin",
+        component: TOrderAdmin,
+      },
+      {
+        path: "Product",
+        name: "ProductAdmin",
+        component: TProductAdmin,
+      },
+      {
+        path: "Report",
+        name: "ReportAdmin",
+        component: TReportAdmin,
+      },
+    ],
   },
-  {
-    path: "/CustomerAdmin",
-    name: "CustomerAdmin",
-    component: TCustomerAdmin,
-  },
-  // {
-  //   path: "/ProductAdmin",
-  //   name: "ProductAdmin",
-  //   component: TProductAdmin,
-  // },
 ];
 
 const router = createRouter({

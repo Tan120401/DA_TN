@@ -4,7 +4,10 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router/router";
 import store from "./vuex/store";
-import { defineEmits } from '@vue/runtime-core'
-const app = createApp(App);
+import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css'
 
+
+const app = createApp(App);
+app.use(Antd)
 app.use(router).use(store).mount("#app");

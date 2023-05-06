@@ -80,6 +80,7 @@ namespace NineStore.DL.BaseDL
             //Chuẩn bị tham số đầu vào cho store
             var parameters = new DynamicParameters();
             var properties = typeof(T).GetProperties();
+            Guid keyValue = Guid.Empty;
             foreach (var prop in properties)
             {
                 if (prop.Name == "ImgName")
@@ -90,8 +91,23 @@ namespace NineStore.DL.BaseDL
                 {
                     parameters.Add($"p_{prop.Name}", prop.GetValue(record));
                 }
+                var keyAttribute = (KeyAttribute?)prop.GetCustomAttributes(typeof(KeyAttribute), false).FirstOrDefault();
+                if(keyAttribute != null)
+                {
+                    if (prop.GetValue(record) != null)
+                    {
+                        keyValue = (Guid)prop.GetValue(record);
+                    }
+                }
             }
-            GeneratePrimaryKey(parameters, properties, null);
+            if(keyValue != Guid.Empty)
+            {
+                GeneratePrimaryKey(parameters, properties, keyValue); 
+            }
+            else
+            {
+                GeneratePrimaryKey(parameters, properties, null);
+            }
             //Khởi tạo kết nối tới DB
             int numberOfAffectedRows;
             using (var mysqlConnection = new MySqlConnection(DataContext.ConnectionString))
@@ -133,6 +149,7 @@ namespace NineStore.DL.BaseDL
                     parameters.Add($"p_{prop.Name}", prop.GetValue(record));
                 }
             }
+
             GeneratePrimaryKey(parameters, properties, recordId);
             // Khởi tạo kết nối DB
             using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
@@ -171,6 +188,41 @@ namespace NineStore.DL.BaseDL
         }
 
         /// <summary>
+        /// Hàm xóa nhiều bản ghi
+        /// </summary>
+        /// <param name="restDetailIds">danh sách Id bản ghi cần xóa </param>
+        /// <returns></returns>
+        /// Author : NVTAN (08/02/2023)
+        public int DeleteRecordMulpty(List<Guid> recordIds)
+        {
+            // khởi tạo câu lệnh sql
+            var sql = "DELETE FROM {0} WHERE {1}Id IN('{2}')";
+            var result = 0;
+            using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
+            {
+                mySqlConnection.Open();
+
+                using (var transaction = mySqlConnection.BeginTransaction())
+                {
+                    try
+                    {
+                        result = mySqlConnection.Execute(string.Format(sql,typeof(T).Name, typeof(T).Name, string.Join("','", recordIds)), transaction: transaction);
+
+                        transaction.Commit();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        transaction.Rollback();
+                    }
+                }
+                mySqlConnection.Close();
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Sinh dữ liệu cho khóa chính
         /// </summary>
         /// <param name="parameters">Các tham số đầu vào</param>
@@ -193,6 +245,30 @@ namespace NineStore.DL.BaseDL
                     }
                 }
             }
+        }
+
+        public dynamic GetRecordByFilterAndPaging(int pageSize, int pageNumber, string? keyword)
+        {
+            string storedProcedureName = String.Format(ProcedureName.Filter, typeof(T).Name);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("p_KeyWord", keyword);
+            parameters.Add("p_PageSize", pageSize);
+            parameters.Add("p_PageNumber", pageNumber);
+
+
+            dynamic records;
+            int totalRecord;
+            using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))
+            {
+                var result = mySqlConnection.QueryMultiple(storedProcedureName, parameters, commandType: CommandType.StoredProcedure);
+                totalRecord = result.Read<int>().Single();
+                records = result.Read<T>().ToList();
+            }
+
+            List<dynamic> dataRecords = new List<dynamic>() { records, totalRecord };
+
+            return dataRecords;
         }
 
         #endregion

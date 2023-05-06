@@ -231,6 +231,32 @@ namespace NineStore.API.Controllers
                 return HandleException(ex);
             }
         }
+        [HttpDelete("delete-mulpty")]
+        public IActionResult DeleteRecordMulpty(List<Guid> recordIds) {
+            try
+            {
+                int result = _baseBL.DeleteRecordMulpty(recordIds);
+                if (result > 0)
+                {
+                    return StatusCode(StatusCodes.Status201Created, result);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                HandleException(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    errorCode = ErrorCode.Exception,
+                    devMsg = ex.Message,
+                    userMsg = Resource.SystemError
+                });
+            }
+        }
 
         /// <summary>
         /// Xử lý ngoại lệ trả về lỗi
@@ -252,6 +278,43 @@ namespace NineStore.API.Controllers
         protected virtual string CreatePathImg(T record)
         {
             return "";
+        }
+
+        [HttpPost("PagingAndFilter")]
+        public IActionResult GetRecordByFilterAndPaging(
+            [FromQuery] string? keyWord,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageNumber = 1
+            )
+        {
+            try
+            {
+                dynamic records = _baseBL.GetRecordByFilterAndPaging(pageSize, pageNumber, keyWord);
+
+                if (records.Data.Count > 0)
+                {
+                    return StatusCode(StatusCodes.Status200OK, records);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status200OK, new ErrorResult
+                    {
+                        ErrorCode = ErrorCode.NoData,
+                        DevMsg = Resource.ErrorToDL,
+                        UserMsg = Resource.ErrorToDL,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResult
+                {
+                    ErrorCode = ErrorCode.Exception,
+                    DevMsg = ex.Message,
+                    UserMsg = Resource.SystemError,
+                });
+            }
         }
         #endregion
     }

@@ -9,8 +9,13 @@ const USER_AXIOS = {
   async setRegister(params) {
     return await axios.post(`${API}`, params);
   },
-  async getAll() {
-    return await axios.get(`${API}`);
+  async forgotPassword(param) {
+    return await axios.post(`${API}/fogot-password?userName=${param}`);
+  },
+  async getUserByFilter(params) {
+    return await axios.post(
+      `${API}/PagingAndFilter?keyWord=${params.keyWord}&pageSize=${params.pageSize}&pageNumber=${params.pageNumber}`
+    );
   },
   async getUserById(param) {
     return await axios.get(`${API}/${param}`);
@@ -24,6 +29,9 @@ const USER_AXIOS = {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+  async deleteUserById(param) {
+    return await axios.delete(`${API}/${param}`);
   },
 };
 

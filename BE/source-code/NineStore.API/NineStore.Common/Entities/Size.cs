@@ -12,6 +12,7 @@ namespace NineStore.Common.Entities
         [Key]
         public Guid? SizeId { get; set; }
         public int? SizeNumber { get; set; }
+        public int? Quantity { get; set; }
         public Guid? ProductId { get; set; }
     }
 }

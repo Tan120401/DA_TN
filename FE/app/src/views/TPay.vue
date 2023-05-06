@@ -10,30 +10,42 @@
           trước khi đặt hàng</span
         >
       </div>
-      <div class="pay__container">
+      <div class="pay__container" ref="validateForm">
         <div class="pay__content-left m-t-32">
           <h3>Chi tiết cá nhân</h3>
           <div class="pay__content-user">
             <div class="flex-item justify-between">
               <div class="user-fullname">
                 <span class="placeholder-input">Họ và tên</span>
-                <TInput></TInput>
+                <TInput
+                  name="Họ và tên"
+                  :rules="['Empty']"
+                  v-model="billOptions.UserName"
+                ></TInput>
               </div>
               <div class="user-phonenumber">
                 <span class="placeholder-input">Số điện thoại</span>
-                <TInput></TInput>
+                <TInput
+                  name="Số điện thoại"
+                  :rules="['Empty']"
+                  v-model="billOptions.PhoneNumber"
+                ></TInput>
               </div>
             </div>
-            <div class="user-email">
+            <!-- <div class="user-email">
               <span class="placeholder-input">Địa chỉ Email</span>
               <TInput></TInput>
-            </div>
+            </div> -->
           </div>
           <h3>Chi tiết vận chuyển</h3>
           <div class="pay__content-user">
             <div class="user-address">
               <span class="placeholder-input">Địa chỉ giao hàng</span>
-              <TInput></TInput>
+              <TInput
+                name="Địa chỉ giao hàng"
+                :rules="['Empty']"
+                v-model="billOptions.Address"
+              ></TInput>
             </div>
           </div>
           <h3>Hình thức thanh toán</h3>
@@ -50,7 +62,13 @@
                     />
                     <span>Thanh toán khi nhận hàng</span>
                   </div>
-                  <input type="radio" class="user-pay-check" />
+                  <input
+                    type="radio"
+                    class="user-pay-check"
+                    @click="paymentOnDelivery"
+                    :v-model="!isPay"
+                    :checked="!isPay"
+                  />
                 </div>
               </div>
               <div class="user-paycard">
@@ -64,30 +82,48 @@
                     />
                     <span>Ví điện tử ZaloPay</span>
                   </div>
-                  <input type="radio" class="user-pay-check" />
+                  <input
+                    type="radio"
+                    class="user-pay-check"
+                    @click="paymentViaCard"
+                    :v-model="isPay"
+                    :checked="isPay"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="pay__content-right m-t-32">
-          <h3>Giỏ hàng của tôi</h3>
-          <div class="pay__content-cart flex-item">
+          <h3>Sản phẩm thanh toán</h3>
+          <div
+            class="pay__content-cart flex-item"
+            v-for="(item, index) in cartProduct"
+            :key="index"
+          >
             <img
-              src="@/assets/img/product/1.1nike.png"
+              :src="require(`@/assets/img/product/${item.ImgProduct}`)"
               alt=""
               class="pay__content-cart-img"
             />
             <div class="pay__content-cart-info">
-              <div class="cart-nameproduct">Nike</div>
-              <div class="cart-size">Size: 40</div>
-              <div class="cart-price">100000đ</div>
+              <div class="cart-nameproduct">{{ item.ProductName }}</div>
+              <div class="cart-size">Size: {{ item.SizeProduct }}</div>
+              <div class="cart-price">
+                Đơn giá:
+                {{ formatter.format(item.Price * (1 - item.Discount / 100)) }}
+              </div>
+              <div>Số lượng: {{ item.NumProduct }}</div>
             </div>
           </div>
-          <div class="pay__content-footer ">
-            <div class="flex-item justify-between"><h4>Tổng thanh toán:</h4>
-            <span >1000000đ</span></div>
-            <button class="tbutton pay-btn m-t-20">Thanh toán</button>
+          <div class="pay__content-footer">
+            <div class="flex-item justify-between">
+              <h4>Tổng thanh toán:</h4>
+              <span>{{ formatter.format(route.query.sumPrice) }}</span>
+            </div>
+            <button class="tbutton pay-btn m-t-20" @click="onBuyNow">
+              Thanh toán
+            </button>
           </div>
         </div>
       </div>
@@ -99,17 +135,170 @@
 <script>
 import { useRoute } from "vue-router";
 import { computed, ref, reactive, watch } from "vue";
+import _ from "lodash";
+import { v4 as uuidv4 } from "uuid";
 
 import THeader from "@/layout/THeader.vue";
 import TFooter from "@/layout/TFooter.vue";
 import TInput from "@/components/TInput.vue";
-
+import { validateData } from "@/js/validateion";
+import {
+  BILL_OPTION,
+  ORDER_OPTIONS,
+  ORDERDETAIL_OPTIONS,
+} from "@/js/constrant.js";
+import AXIOS_ORDER from "@/api/order";
+import AXIOS_ORDER_DETAIL from "@/api/orderdetail";
+import AXIOS_BILL from "@/api/bill";
+import AXIOS_CART from "@/api/cart";
+import store from "@/vuex/store";
+import router from "@/router/router";
 export default {
   name: "TPay",
   components: {
     THeader,
     TFooter,
     TInput,
+  },
+  setup() {
+    const route = useRoute();
+    const cartProduct = ref();
+    const isPay = ref(false);
+    const validateForm = ref(null);
+    const billOptions = reactive(_.cloneDeep(BILL_OPTION));
+    const orderOptions = reactive(_.cloneDeep(ORDER_OPTIONS));
+    const orderDetailOptions = reactive(_.cloneDeep(ORDERDETAIL_OPTIONS));
+    const listCartId = ref([]);
+    /**
+     * Nhận giá trị thông qua router query
+     */
+    cartProduct.value = JSON.parse(route.query.value);
+    let cartLists = [];
+    cartProduct.value.forEach((item, index) => {
+      cartLists.push(item.CartId);
+    });
+    listCartId.value = cartLists;
+
+    /**
+     * Thanh toán khi nhận hàng
+     */
+    const paymentOnDelivery = () => {
+      isPay.value = !isPay.value;
+    };
+    /**
+     * Thanh toán qua thẻ ngân hàng
+     */
+    const paymentViaCard = () => {
+      isPay.value = !isPay.value;
+      console.log(isPay.value);
+    };
+    /**
+     * Xóa sản phẩm đã thanh toán ở trong giỏ hàng
+     */
+    const deleteMulptyCart = async (params) => {
+      try {
+        let response = await AXIOS_CART.deleteMulptyCart(params);
+        if (response) {
+          if (response) {
+            router.push({ path: "/Order/0" });
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    /**
+     * insert bảng order
+     */
+    const insertToOrder = async (params) => {
+      try {
+        let response = await AXIOS_ORDER.insertOrder(params);
+        if (response) {
+          if (response) {
+            billOptions.OrderId = orderOptions.OrderId;
+            insertToBill(billOptions);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    /**
+     * Insert bảng orderDetail
+     */
+    const insertToOrderDetail = async (params) => {
+      try {
+        let response = await AXIOS_ORDER_DETAIL.insertOrderDetail(params);
+        if (response) {
+          deleteMulptyCart(listCartId.value);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    /**
+     * Insert bảng Bill
+     */
+    const insertToBill = async (params) => {
+      try {
+        console.log(billOptions);
+        let response = await AXIOS_BILL.insertBill(params);
+        if (response) {
+          cartProduct.value.forEach((item, index) => {
+            orderDetailOptions.OrderId = orderOptions.OrderId;
+            orderDetailOptions.ProductId = item.ProductId;
+            orderDetailOptions.Quantity = item.NumProduct;
+            orderDetailOptions.Price = item.Price;
+            orderDetailOptions.Size = item.SizeProduct;
+            insertToOrderDetail(orderDetailOptions);
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    /**
+     * Click thanh toán
+     */
+    const onBuyNow = () => {
+      if (isPay.value) {
+        billOptions.IsPay = 1;
+      } else {
+        billOptions.IsPay = 0;
+      }
+      orderOptions.UserId = store.state.userInfo.UserId;
+      orderOptions.OrderId = uuidv4();
+      /**
+       * Validate
+       */
+      var lstInput = validateForm.value.querySelectorAll("input");
+      var inValid = validateData(lstInput);
+      if (inValid.isValidate) {
+        insertToOrder(orderOptions);
+      }
+    };
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return {
+      validateForm,
+      insertToOrder,
+      insertToOrderDetail,
+      onBuyNow,
+      route,
+      isPay,
+      paymentOnDelivery,
+      paymentViaCard,
+      cartProduct,
+      formatter,
+      billOptions,
+      orderOptions,
+      orderDetailOptions,
+      insertToBill,
+      listCartId,
+      deleteMulptyCart,
+    };
   },
 };
 </script>

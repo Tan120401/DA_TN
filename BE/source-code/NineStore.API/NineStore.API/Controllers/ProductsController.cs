@@ -35,6 +35,17 @@ namespace NineStore.API.Controllers
             }
         }
 
+        [HttpPost("upload-file")]
+        public IActionResult CreateFile([FromForm] FileModel fileModel)
+        {
+            string path = Path.Combine(@"D:\DO_AN\FE\app\src\assets\img\product", fileModel.FileName);
+            using (Stream stream = new FileStream(path, FileMode.Create))
+            {
+                fileModel.File.CopyTo(stream);
+            }
+            return StatusCode(StatusCodes.Status200OK, 1);
+        }
+
         #endregion
     }
 }

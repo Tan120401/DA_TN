@@ -138,7 +138,7 @@ namespace NineStore.API.Controllers
             using (var client = new SmtpClient())
             {
                 client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-                client.Authenticate("theninestore68@gmail.com", "bguvzpoepiwfhkdx");
+                client.Authenticate("theninestore68@gmail.com", "qrqrccjtesvpsdrh");
                 client.Send(email);
                 client.Disconnect(true);
             }

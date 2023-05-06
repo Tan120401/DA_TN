@@ -57,6 +57,11 @@ namespace NineStore.BL.BaseBL
         /// Created by: NVTan (09/02/2023)
         int DeleteRecord([FromRoute] Guid recordId);
 
+        int DeleteRecordMulpty(List<Guid> recordIds);
+
+        public dynamic GetRecordByFilterAndPaging(int pageSize, int pageNumber, string? keyWord);
+
+
         #endregion
 
     }

@@ -42,7 +42,7 @@ namespace NineStore.Common.Entities
         /// <summary>
         /// Số lượng còn lại
         /// </summary>
-        public int? Quantity { get; set; }
+        public int? Quantity { get; set; } 
         /// <summary>
         /// Giảm giả
         /// </summary>

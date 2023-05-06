@@ -70,8 +70,7 @@
     row-gap: 8px;
 }
 .pay__content-right .pay__content-cart{
-    padding-top: 32px;
-    padding-bottom: 56px;
+    padding: 32px 0;
     border-bottom: 1px solid var(--primary-color);
 }
 .pay__content-footer{

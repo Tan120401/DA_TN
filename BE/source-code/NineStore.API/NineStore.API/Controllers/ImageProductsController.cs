@@ -18,5 +18,6 @@ namespace NineStore.API.Controllers
         {
             _imageProductBL = imageProductBL;
         }
+
     }
 }

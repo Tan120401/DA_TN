@@ -1,154 +1,26 @@
 <template>
-  <div id="admin__main">
-    <TSidebar></TSidebar>
-    <div class="admin__main-content-right">
-      <THeaderAdmin></THeaderAdmin>
-      <div class="table-list">
-        <div class="d-flex justify-content-between">
-          <h4>Danh sách khách hàng</h4>
-          <button type="button" class="btn btn-primary">Thêm khác hàng</button>
-        </div>
-        <table class="table mt-3">
-          <thead>
-            <tr>
-              <th scope="col">STT</th>
-              <th scope="col">Họ và tên</th>
-              <th scope="col">Email</th>
-              <th scope="col">Tên tài khoản</th>
-              <th scope="col">Tên tài khoản</th>
-              <th scope="col">Mật khẩu</th>
-              <th scope="col">Chức năng</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>
-                <!-- Button trigger modal -->
-                <button
-                  type="button"
-                  class="btn btn-primary me-2"
-                  data-bs-toggle="modal"
-                  data-bs-target="#form-add"
-                >
-                  Sửa
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#popupdanger"
-                >
-                  Xóa
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="table-list">
+    <div class="d-flex justify-between">
+      <TOrderReport
+        :title="'Tổng số đơn hàng tháng này'"
+        :content="orderAll.length"
+      ></TOrderReport>
+      <TOrderReport
+        :title="'Tổng số đơn hàng chờ xác nhận'"
+        :content="orderPending"
+      ></TOrderReport>
+      <TOrderReport
+        :title="'Tổng số đơn hàng đang giao'"
+        :content="orderShipping"
+      ></TOrderReport>
+      <TOrderReport
+        :title="'Tổng số đơn hàng đã hủy'"
+        :content="orderRejected"
+      ></TOrderReport>
     </div>
-    <TPopupVue
-      popupId="popupdanger"
-      popupTile="Xóa khách hàng"
-      popupContent="Bạn có chắc chắn muốn xóa người dùng không"
-    ></TPopupVue>
-
-    <div
-      class="modal fade"
-      id="form-add"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Thêm khách hàng</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form class="row g-3">
-              <div class="col-md-6">
-                <label for="inputEmail4" class="form-label">Email</label>
-                <input type="email" class="form-control" id="inputEmail4" />
-              </div>
-              <div class="col-md-6">
-                <label for="inputPassword4" class="form-label">Password</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="inputPassword4"
-                />
-              </div>
-              <div class="col-12">
-                <label for="inputAddress" class="form-label">Address</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="inputAddress"
-                  placeholder="1234 Main St"
-                />
-              </div>
-              <div class="col-12">
-                <label for="inputAddress2" class="form-label">Address 2</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="inputAddress2"
-                  placeholder="Apartment, studio, or floor"
-                />
-              </div>
-              <div class="col-md-6">
-                <label for="inputCity" class="form-label">City</label>
-                <input type="text" class="form-control" id="inputCity" />
-              </div>
-              <div class="col-md-4">
-                <label for="inputState" class="form-label">State</label>
-                <select id="inputState" class="form-select">
-                  <option selected>Choose...</option>
-                  <option>...</option>
-                </select>
-              </div>
-              <div class="col-md-2">
-                <label for="inputZip" class="form-label">Zip</label>
-                <input type="text" class="form-control" id="inputZip" />
-              </div>
-              <div class="col-12">
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="gridCheck"
-                  />
-                  <label class="form-check-label" for="gridCheck">
-                    Check me out
-                  </label>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Đóng
-            </button>
-            <button type="button" class="btn btn-primary">Lưu</button>
-          </div>
-        </div>
-      </div>
+    <div>
+      <h5 class="mt-3">Thống kê số đơn hàng đã hoàn thành theo tháng</h5>
+      <TLine v-if="label.length" :label="label" :data="data"></TLine>
     </div>
   </div>
 </template>
@@ -157,18 +29,89 @@
 import TSidebar from "@/layout/TSidebar.vue";
 import THeaderAdmin from "./THeaderAdmin.vue";
 import TPopupVue from "@/components/TPopup.vue";
-import { useStore } from "vuex";
-
+import TOrderReport from "@/components/TOrderReport.vue";
+import TLine from "@/components/TLine.vue";
+import AXIOS_ORDER from "@/api/order";
+import { FILTER_OPTION } from "@/js/constrant";
+import { ref, reactive } from "vue";
 export default {
   components: {
     TSidebar,
     THeaderAdmin,
     TPopupVue,
+    TOrderReport,
+    TLine,
   },
   setup() {
-    const $store = useStore();
+    const filterOption = reactive(_.cloneDeep(FILTER_OPTION));
+    const orderAll = ref([]);
+    const orderPending = ref(0);
+    const orderShipping = ref(0);
+    const orderRejected = ref(0);
+    const orderSuccess = ref([]);
+    const takenValues = {};
+    const label = ref([]);
+    const data = ref([]);
+    const getAllOrderByFilter = async (params) => {
+      try {
+        let response = await AXIOS_ORDER.getAllOrderServicebyFilter(params);
+        if (response) {
+          orderAll.value = response.data.Data;
+          for (var i = 0; i < orderAll.value.length; i++) {
+            if (orderAll.value[i].Status == 0) {
+              orderPending.value += 1;
+            }
+            if (orderAll.value[i].Status == 1) {
+              orderShipping.value += 1;
+            }
+            if (orderAll.value[i].Status == 2) {
+              orderSuccess.value.push(orderAll.value[i]);
+            }
+            if (orderAll.value[i].Status == 3) {
+              orderRejected.value += 1;
+            }
+          }
+          for (var i = 0; i < orderSuccess.value.length; i++) {
+            console.log(orderSuccess.value[i].CreatedDate);
+            const date = new Date(orderSuccess.value[i].CreatedDate);
+            const value = date.getMonth() + 1;
+            if (!takenValues[value]) {
+              takenValues[value] = true;
+              label.value.push(value);
+            }
+          }
+          label.value.sort((a, b) => a - b);
+
+          for (var i = 0; i < label.value.length; i++) {
+            let num = 0;
+            for (var j = 0; j < orderSuccess.value.length; j++) {
+              const date = new Date(orderSuccess.value[j].CreatedDate);
+              const value = date.getMonth() + 1;
+              if (value == label.value[i]) {
+                num += 1;
+              }
+            }
+            data.value.push(num);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    filterOption.pageSize = 999;
+    getAllOrderByFilter(filterOption);
+
     return {
-      $store,
+      takenValues,
+      label,
+      data,
+      filterOption,
+      orderAll,
+      orderPending,
+      orderShipping,
+      orderSuccess,
+      orderRejected,
+      getAllOrderByFilter,
     };
   },
 };

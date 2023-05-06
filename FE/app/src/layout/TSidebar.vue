@@ -13,46 +13,17 @@
     </router-link>
     <hr />
     <ul class="nav nav-pills flex-column mb-auto">
-      <router-link to="/HomeAdmin">
-        <li>
-          <a
-            href="#"
-            class="nav-link text-white"
-            :class="{ active: $route.name == 'HomeAdmin' }"
-            aria-current="page"
-          >
-            <i class="bi me-2 bi-house"></i>
-            Trang chủ
-          </a>
+      <router-link to="/Admin/Home">
+        <li
+          class="nav-link text-white"
+          :class="{ active: $route.name == 'HomeAdmin' }"
+          aria-current="page"
+        >
+          <i class="bi me-2 bi-house"></i>
+          Trang chủ
         </li></router-link
       >
-      <router-link to="/OrderAdmin">
-        <li>
-          <a
-            href="#"
-            class="nav-link text-white"
-            :class="{ active: $route.name == 'OrderAdmin' }"
-            aria-current="page"
-          >
-            <i class="bi me-2 bi-table"></i>
-            Đơn hàng
-          </a>
-        </li></router-link
-      >
-      <router-link to="/ProductAdmin">
-        <li>
-          <a
-            href="#"
-            class="nav-link text-white"
-            :class="{ active: $route.name == 'ProductAdmin' }"
-            aria-current="page"
-          >
-            <i class="bi me-2 bi-grid-fill"></i>
-            Sản phẩm
-          </a>
-        </li></router-link
-      >
-      <router-link to="/CustomerAdmin">
+      <router-link to="/Admin/Customer">
         <li>
           <a
             href="#"
@@ -65,7 +36,34 @@
           </a>
         </li></router-link
       >
-      <router-link to="/ReportAdmin">
+      <router-link to="/Admin/Order">
+        <li>
+          <a
+            href="#"
+            class="nav-link text-white"
+            :class="{ active: $route.name == 'OrderAdmin' }"
+            aria-current="page"
+          >
+            <i class="bi me-2 bi-table"></i>
+            Đơn hàng
+          </a>
+        </li></router-link
+      >
+      <router-link to="/Admin/Product">
+        <li>
+          <a
+            href="#"
+            class="nav-link text-white"
+            :class="{ active: $route.name == 'ProductAdmin' }"
+            aria-current="page"
+          >
+            <i class="bi me-2 bi-grid-fill"></i>
+            Sản phẩm
+          </a>
+        </li></router-link
+      >
+
+      <router-link to="/Admin/Report">
         <li>
           <a
             href="#"
@@ -78,6 +76,24 @@
           </a>
         </li></router-link
       >
+      <!-- <li class="mb-1">
+        <button
+          class="btn btn-toggle align-items-center rounded nav-link text-white"
+          data-bs-toggle="collapse"
+          data-bs-target="#home-collapse"
+          aria-expanded="true"
+        >
+          <i class="bi me-2 bi-grid-fill"></i>
+          Home
+        </button>
+        <div class="collapse show" id="home-collapse" style="">
+          <ul class="btn-toggle-nav list-unstyled" style="margin-left: 42px">
+            <li class="mb-1"><a href="#" class="text-white">Danh sách sản phẩm</a></li>
+            <li class="mb-1"><a href="#" class="text-white">Thêm sản phẩm</a></li>
+            <li class="mb-1"><a href="#" class="text-white">Reports</a></li>
+          </ul>
+        </div>
+      </li> -->
     </ul>
   </div>
 </template>

@@ -34,12 +34,29 @@ export default {
         } else {
           isValidate.value = false;
         }
-        if (props.rules[1]) {
-          if (props.rules[1] == "Email") {
+        for (var i = 0; i < props.rules.length; i++) {
+          if (props.rules[i] == "Email") {
             const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (!val.trim().match(regexEmail)) {
+            if (!val || val.trim() == "") {
               isValidate.value = true;
-              messageValidate.value = props.name + " không đúng định dạng";
+              messageValidate.value = props.name + " không được để trống.";
+            } else if (val && !val.match(regexEmail)) {
+              isValidate.value = true;
+              messageValidate.value = props.name + " không đúng định dạng.";
+            } else {
+              isValidate.value = false;
+            } 
+          } else if (props.rules[i] == "Password") {
+            const regexPassword = new RegExp(
+              "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
+            );
+            if (!val || val.trim() == "") {
+              isValidate.value = true;
+              messageValidate.value = props.name + " không được để trống.";
+            } else if (val && !regexPassword.test(val)) {
+              isValidate.value = true;
+              messageValidate.value =
+                " Tối thiểu 8 ký tự và có chứa ít nhất một chữ cái và một chữ số";
             } else {
               isValidate.value = false;
             }
@@ -59,7 +76,7 @@ export default {
 .isEmpty {
   color: var(--sub-color);
   position: absolute;
-  bottom: 3px;
+  bottom: 1px;
   font-size: 11px;
   font-style: italic;
 }

@@ -10,6 +10,8 @@ namespace NineStore.DL.SizeDL
 {
     public interface ISizeDL: IBaseDL<Size>
     {
+        public int InsertMupltySize(List<Size> Sizes);
+        public List<Size> GetSizeByProductId(Guid recordId);
 
     }
 }

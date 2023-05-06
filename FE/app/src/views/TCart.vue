@@ -48,11 +48,24 @@
                   class="fa-solid fa-minus product__detail-remove"
                   @click="removeProduct(item)"
                 ></i>
-                <input type="text" class="number" v-model="item.NumProduct" />
+                <input
+                  type="text"
+                  class="number"
+                  v-model="item.NumProduct"
+                  @change="onChangeValue(item)"
+                />
                 <i
                   class="fa-solid fa-plus product__detail-add"
                   @click="addProduct(item)"
                 ></i>
+              </div>
+              <div style="position: relative">
+                <span
+                  class="numproduct-fail"
+                  style="left: 0"
+                  v-if="item.NumProduct > item.Quantity"
+                  >Số lượng lớn hơn số còn lại.</span
+                >
               </div>
             </td>
             <td>
@@ -75,8 +88,7 @@
               <button
                 type="button"
                 class="btn btn-outline-danger btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#popupdeletecart"
+                @click="onShowPopup(item)"
               >
                 <i class="bi bi-trash"></i>
                 Xóa
@@ -93,9 +105,8 @@
           <div class="delete-item">
             <button
               type="button"
+              @click="onShowPopupMulpty"
               class="btn btn-outline-danger btn-sm"
-              data-bs-toggle="modal"
-              data-bs-target="#popupdeletecarts"
             >
               <i class="bi bi-trash"></i>
               Xóa
@@ -105,18 +116,26 @@
         <div class="cart__bottom-right">
           <div class="flex-item">
             Tổng thanh toán( {{ selected.length }} ):
-            <span>{{ sumPrice }}</span>
+            <span>{{ formatter.format(sumPrice) }}</span>
           </div>
-          <div class="tbutton buy-now">Mua hàng</div>
+          <div class="tbutton buy-now" @click="onBuyItem">Mua hàng</div>
         </div>
       </div>
     </div>
     <TPopup
-      popupId="popupdeletecart"
       popupTile="Xóa sản phẩm giỏ hàng"
       popupContent="Bạn có chắc chắn muốn xóa sản phẩm này không?"
       v-if="isShowPopup"
-      @handleClick="handleClick"
+      @handleClick="handleClickPopup"
+      @hidePopup="hidePopup"
+    ></TPopup>
+
+    <TPopup
+      popupTile="Xóa sản phẩm giỏ hàng"
+      popupContent="Bạn có chắc chắn muốn xóa những sản phẩm đã chọn không không?"
+      v-if="isShowPopupMulpty"
+      @handleClick="handleClickPopupMulpty"
+      @hidePopup="hidePopup"
     ></TPopup>
     <TFooter></TFooter>
   </div>
@@ -126,12 +145,15 @@
 import { useRoute } from "vue-router";
 import { computed, ref, reactive, watch } from "vue";
 import { useStore } from "vuex";
+import router from "@/router/router";
 
 import THeader from "@/layout/THeader.vue";
 import TFooter from "@/layout/TFooter.vue";
 import AXIOS_CART from "@/api/cart";
+import AXIOS_PRODUCT from "@/api/Product";
 import TPopup from "@/components/TPopup.vue";
-import { defineComponent } from 'vue'
+import AXIOS_SIZE from "@/api/size";
+
 export default {
   name: "TCart",
   components: {
@@ -144,7 +166,42 @@ export default {
     const store = useStore();
     const dataSources = ref();
     const selected = ref([]);
-    const isShowPopup = ref(true);
+    const isShowPopup = ref(false);
+    const isShowPopupMulpty = ref(false);
+    const cartIdSelected = ref();
+    const listCartIdSelected = ref();
+    const popupContent = ref();
+    const productDetail = ref([]);
+    const sizeOptions = ref([]);
+    const isOverLoadNumProduct = ref(false);
+    /**
+     * Thay đổi số lượng sản phẩm
+     */
+    const onChangeValue = (value) => {
+      getProductById(value.ProductId);
+      getAllSizeProduct(value.ProductId);
+      sizeOptions.value.forEach((item, index) => {
+        if (item.SizeNumber == value.SizeProduct) {
+          value.Quantity = item.Quantity;
+        }
+      });
+      if (value.NumProduct > value.Quantity) {
+        isOverLoadNumProduct.value = true;
+      } else {
+        isOverLoadNumProduct.value = false;
+      }
+    };
+
+    const getAllSizeProduct = async (param) => {
+      try {
+        let response = await AXIOS_SIZE.getSizeByProductId(param);
+        if (response) {
+          sizeOptions.value = response.data;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
     /**
      * Bỏ sản phẩm
      */
@@ -155,6 +212,7 @@ export default {
       if (value.NumProduct > 1) {
         value.NumProduct -= 1;
       }
+      onChangeValue(value);
     };
     /**
      * Thêm sản phẩm
@@ -164,6 +222,21 @@ export default {
         value.NumProduct = parseInt(value.NumProduct);
       }
       value.NumProduct += 1;
+      onChangeValue(value);
+    };
+    /**
+     * Hàm lấy thông tin sản phẩm thông qua id
+     * @param {Id product} param
+     */
+    const getProductById = async (param) => {
+      try {
+        let response = await AXIOS_PRODUCT.getProductById(param);
+        if (response) {
+          productDetail.value = response.data[0];
+        }
+      } catch (err) {
+        console.log(err);
+      }
     };
     /**
      * Tính tổng tiền
@@ -172,7 +245,10 @@ export default {
     const sumPrice = computed(() => {
       var sum = 0;
       for (let key in selected.value) {
-        sum += selected.value[key].NumProduct * selected.value[key].Price;
+        sum +=
+          selected.value[key].NumProduct *
+          selected.value[key].Price *
+          (1 - selected.value[key].Discount / 100);
       }
       return sum;
     });
@@ -201,16 +277,103 @@ export default {
         let response = await AXIOS_CART.getCartByUserId(param);
         if (response) {
           dataSources.value = response.data;
+          dataSources.value.forEach((item) => {
+            item.Quantity = 999;
+          });
         }
       } catch (err) {
         console.log(err);
       }
     };
     getCartByUserId(store.state.userInfo.UserId);
-    // console.log(route.query);
 
-    const handleClick = () => {
-      console.log(123);
+    /**
+     * Hiện popup
+     */
+    const onShowPopup = (item) => {
+      isShowPopup.value = true;
+      cartIdSelected.value = item.CartId;
+    };
+    /**
+     * Hiện popup xóa nhiều
+     */
+    const onShowPopupMulpty = () => {
+      isShowPopupMulpty.value = true;
+      let selectedCart = [];
+      selected.value.forEach((item) => {
+        selectedCart.push(item.CartId);
+      });
+      listCartIdSelected.value = selectedCart;
+    };
+
+    /**
+     * Ẩn popup
+     */
+    const hidePopup = () => {
+      isShowPopup.value = false;
+      isShowPopupMulpty.value = false;
+    };
+    /**
+     * Xóa sản phẩm giỏ hàng
+     * @param {Cart id} param
+     */
+    const delteCartById = async (param) => {
+      try {
+        let response = await AXIOS_CART.deleteCartById(param);
+        if (response) {
+          getCartByUserId(store.state.userInfo.UserId);
+          hidePopup();
+          selected.value.forEach((element, index) => {
+            if (element.CartId == cartIdSelected.value) {
+              selected.value.splice(index, 1);
+            }
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    /**
+     * Xóa nhiều sản phẩm trong giỏ hàng
+     */
+    const deleteMulptyCart = async (params) => {
+      try {
+        let response = await AXIOS_CART.deleteMulptyCart(params);
+        if (response) {
+          getCartByUserId(store.state.userInfo.UserId);
+          hidePopup();
+          selected.value = [];
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    /**
+     * Khi ấn nút xóa
+     */
+    const handleClickPopup = () => {
+      delteCartById(cartIdSelected.value);
+    };
+    /**
+     * Khi ấn nút xóa nhiều
+     */
+    const handleClickPopupMulpty = () => {
+      if (listCartIdSelected.value) {
+        deleteMulptyCart(listCartIdSelected.value);
+      }
+    };
+    const onBuyItem = () => {
+      if (isOverLoadNumProduct.value) {
+        return;
+      } else if (selected.value.length > 0) {
+        router.push({
+          path: "/Pay",
+          query: {
+            value: JSON.stringify(selected.value),
+            sumPrice: sumPrice.value,
+          },
+        });
+      }
     };
     /**
      * Định dạng tiền tệ VND
@@ -220,8 +383,24 @@ export default {
       currency: "VND",
     });
     return {
+      isOverLoadNumProduct,
+      sizeOptions,
+      getAllSizeProduct,
+      onChangeValue,
+      getProductById,
+      productDetail,
+      onBuyItem,
       isShowPopup,
-      handleClick,
+      isShowPopupMulpty,
+      popupContent,
+      cartIdSelected,
+      listCartIdSelected,
+      handleClickPopup,
+      handleClickPopupMulpty,
+      delteCartById,
+      hidePopup,
+      onShowPopup,
+      onShowPopupMulpty,
       store,
       route,
       dataSources,
@@ -232,6 +411,7 @@ export default {
       sumPrice,
       formatter,
       getCartByUserId,
+      deleteMulptyCart,
     };
   },
 };

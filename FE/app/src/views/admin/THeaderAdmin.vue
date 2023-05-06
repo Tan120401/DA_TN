@@ -21,7 +21,7 @@
             <img
               :src="
                 require(`../../assets/img/user/${
-                  $store.state.userInfo.ImgName || 'avatar-null.jpeg'
+                  store.state.userInfo.ImgName || 'avatar-null.jpeg'
                 }`)
               "
               alt=""
@@ -36,7 +36,7 @@
             aria-labelledby="dropdownUser1"
           >
             <li><a class="dropdown-item" href="#">Cài đặt</a></li>
-            <router-link :to="`/Profile/${$store.state.userInfo.UserId}`"
+            <router-link :to="`/Profile/${store.state.userInfo.UserId}`"
               ><li>
                 <a class="dropdown-item" href="#">Thông tin cá nhân</a>
               </li></router-link
@@ -55,9 +55,9 @@ import { useStore } from "vuex";
 export default {
   name: "THeaderAdmin",
   setup() {
-    const $store = useStore();
+    const store = useStore();
     return {
-      $store,
+      store,
     };
   },
 };

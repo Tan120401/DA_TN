@@ -26,32 +26,65 @@
               >Tên đăng nhập hoặc mật khẩu không chính xác</span
             >
           </div>
-          <div class="dont-account">
-            <div class="dont-account-text m-r-8 m-t-20">
+          <div
+            class="dont-account d-flex align-items-center m-r-8 m-t-20 justify-content-between"
+          >
+            <div class="dont-account-text">
               Bạn chưa có tài khoản?
               <router-link to="/Register"
                 ><span class="m-t-20">Đăng ký</span></router-link
               >
             </div>
+            <span @click="onShowPoupForgotPass">Quên mật khẩu?</span>
           </div>
         </form>
       </div>
     </div>
   </div>
+
+  <TPopup
+    popupTile="Quên mật khẩu"
+    v-if="isShowPopupForgotPassword"
+    @hidePopup="hidePopupForgotPassword"
+  >
+    <template #content>
+      <div ref="validateForgotPass">
+        <div class="mb-1">Vui lòng nhập tên tài khoản của bạn</div>
+        <t-input
+          v-model="emailOfUser"
+          :rules="['Email']"
+          name="Email"
+        ></t-input>
+        <div style="position: relative; top: -18px">
+          <span class="login-fail" v-if="isShowForgotFail"
+            >Tài khoản không chính xác</span
+          >
+        </div>
+      </div>
+    </template>
+    <template #footer>
+      <button type="button" class="btn btn-primary" @click="onSubmitForgotPass">
+        Xác nhận
+      </button>
+    </template>
+  </TPopup>
 </template>
 
 <script>
 import TInput from "@/components/TInput.vue";
-
+import TPopup from "@/components/TPopup.vue";
 import { USER } from "@/js/data";
 import { reactive, ref, watch } from "vue";
 import { useStore } from "vuex";
 import _ from "lodash";
 import { validateData } from "@/js/validateion";
+import USER_AXIOS from "@/api/user";
+import { notification } from "ant-design-vue";
 export default {
   name: "TLogin",
   components: {
     TInput,
+    TPopup,
   },
   setup() {
     const isLogin = ref(true);
@@ -59,6 +92,41 @@ export default {
     const isShowLoginFail = ref(false);
     const $store = useStore();
     const validateForm = ref(null);
+
+    const isShowPopupForgotPassword = ref(false);
+    const validateForgotPass = ref(null);
+    const emailOfUser = ref();
+    const isShowForgotFail = ref();
+
+    const onShowPoupForgotPass = () => {
+      isShowPopupForgotPassword.value = true;
+      emailOfUser;
+    };
+    const hidePopupForgotPassword = () => {
+      isShowPopupForgotPassword.value = false;
+    };
+    const onSubmitForgotPass = async () => {
+      var lstInput = validateForgotPass.value.querySelectorAll("input");
+      var inValid = validateData(lstInput);
+      if (inValid.isValidate) {
+        try {
+          let response = await USER_AXIOS.forgotPassword(emailOfUser.value);
+          if (response) {
+            notification.success({
+              message: "Mật khẩu mới đã được gửi về tài khoản gmail của bạn!",
+            });
+            setTimeout(() => {
+              hidePopupForgotPassword();
+            }, 1000);
+          }
+        } catch (error) {
+          console.log(error);
+          if (error.response.data.ErrorCode == 5) {
+            isShowForgotFail.value = true;
+          }
+        }
+      }
+    };
     /**
      * Hàm đăng nhập
      * Created by NVTAN(04/04/2023)
@@ -72,107 +140,22 @@ export default {
       }
     };
     return {
+      isShowForgotFail,
       isLogin,
       isShowLoginFail,
       user,
       validateForm,
       onLogin,
+      isShowPopupForgotPassword,
+      validateForgotPass,
+      hidePopupForgotPassword,
+      onShowPoupForgotPass,
+      onSubmitForgotPass,
+      emailOfUser,
     };
   },
 };
 </script>
 
 <style>
-.confirm-error {
-  position: relative;
-  font-size: 11px;
-  color: var(--sub-color);
-  top: -10px;
-}
-.modal1 {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(79, 76, 76, 0.4);
-  z-index: 10;
-}
-.modal-form img {
-  width: 100%;
-  height: calc(100vh - 4px);
-}
-.modal1 .logo {
-  position: absolute;
-  left: 128px;
-  top: 56px;
-  color: var(--primary-color);
-  z-index: 100;
-}
-.login-form,
-.register-form {
-  width: 488px;
-  height: 544px;
-  padding: 64px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 128px;
-  background-color: #fff;
-  border-radius: 32px;
-}
-.register-form {
-  height: 644px;
-}
-.register-title {
-  margin: 0 auto;
-  margin-bottom: 16px;
-  text-align: center;
-}
-.login-title {
-  margin: 0 auto;
-  margin-bottom: 32px;
-  text-align: center;
-}
-.tbutton.btn-login {
-  width: 100%;
-  height: 48px;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.dont-account,
-.accept {
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-.accept i {
-  opacity: 0.5;
-}
-.dont-account-text {
-  opacity: 0.6;
-}
-.dont-account span {
-  color: var(--primary-color);
-  cursor: pointer;
-  font-weight: 70;
-}
-
-.confirm-password {
-  margin-top: 20px;
-}
-
-.login-fail,
-.register-fail {
-  position: absolute;
-  top: 6px;
-  font-size: 11px;
-  color: var(--sub-color);
-  font-style: italic;
-}
-.register-fail {
-  top: -19px;
-}
 </style>

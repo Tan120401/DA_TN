@@ -18,13 +18,14 @@ namespace NineStore.DL.BaseDL
         /// Created by: NVTan (09/02/2023)
         public List<T> GetAllRecord();
 
-        /// <summary>
-        /// Tìm bản ghi theo ID
-        /// </summary>
-        /// <param name="recordId">ID bản ghi cần tìm kiếm</param>
-        /// <returns>Bản ghi cần tìm kiếm</returns>
-        /// Created by: NVTan (16/01/2023)
-        List<T> GetRecordById(Guid recordId);
+        public dynamic GetRecordByFilterAndPaging(int pageSize, int pageNumber, string? keyword);
+            /// <summary>
+            /// Tìm bản ghi theo ID
+            /// </summary>
+            /// <param name="recordId">ID bản ghi cần tìm kiếm</param>
+            /// <returns>Bản ghi cần tìm kiếm</returns>
+            /// Created by: NVTan (16/01/2023)
+            List<T> GetRecordById(Guid recordId);
 
         /// <summary>
         /// Thêm mới một bản ghi
@@ -57,7 +58,10 @@ namespace NineStore.DL.BaseDL
         /// 0: Nếu insert thất bại
         /// </returns>
         /// Created by: NVTan (09/02/2023)
-        int DeleteRecord(Guid recordId); 
+        int DeleteRecord(Guid recordId);
+
+        int DeleteRecordMulpty(List<Guid> recordIds);
+
 
         #endregion
     }

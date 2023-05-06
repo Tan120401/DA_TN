@@ -87,7 +87,7 @@ namespace NineStore.BL.BaseBL
             var numberOfAffectedResult = 0;
             if (recordId == Guid.Empty)
             {
-                numberOfAffectedResult = _baseDL.InsertRecord(record, imgName);
+                numberOfAffectedResult = _baseDL.InsertRecord(record, imgName); 
             }
             else
             {
@@ -166,7 +166,7 @@ namespace NineStore.BL.BaseBL
                     }
                     *//*DateTime datetime;
                     if (DateTime.TryParse(propertyValue.ToString(), out datetime))
-                    {
+                    {   
                         DateTime time = DateTime.Parse(propertyValue.ToString());
                         if (time > DateTime.Now)
                         {
@@ -236,6 +236,28 @@ namespace NineStore.BL.BaseBL
 
             //Kết quả trả về
             return listRecords;
+        }
+
+        public int DeleteRecordMulpty(List<Guid> recordIds)
+        {
+            int result = _baseDL.DeleteRecordMulpty(recordIds);
+            return result;
+        }
+
+        public dynamic GetRecordByFilterAndPaging(int pageSize, int pageNumber, string? keyWord)
+        {
+
+            dynamic dataRecord = _baseDL.GetRecordByFilterAndPaging(pageSize, pageNumber, keyWord);
+            double totalPage = Convert.ToDouble(dataRecord[1]) / pageSize;
+
+            return new PagingResult<T>
+            {
+                CurrentPage = pageNumber,
+                CurrentPageRecords = pageSize,
+                TotalPage = Convert.ToInt32(Math.Ceiling(totalPage)),
+                TotalRecord = dataRecord[1],
+                Data = dataRecord[0],
+            };
         }
 
         #endregion
