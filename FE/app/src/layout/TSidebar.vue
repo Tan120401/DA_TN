@@ -20,7 +20,7 @@
           aria-current="page"
         >
           <i class="bi me-2 bi-house"></i>
-          Trang chủ
+          Thống kê báo cáo
         </li></router-link
       >
       <router-link to="/Admin/Customer">
@@ -63,7 +63,7 @@
         </li></router-link
       >
 
-      <router-link to="/Admin/Report">
+      <!-- <router-link to="/Admin/Report">
         <li>
           <a
             href="#"
@@ -75,7 +75,7 @@
             Thống kê báo cáo
           </a>
         </li></router-link
-      >
+      > -->
       <!-- <li class="mb-1">
         <button
           class="btn btn-toggle align-items-center rounded nav-link text-white"

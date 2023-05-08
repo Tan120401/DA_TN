@@ -20,8 +20,8 @@
             <th style="width: 120px">Size</th>
             <th style="width: 120px">Số lượng</th>
             <th style="width: 320px">Đơn giá</th>
-            <th style="width: 169px">Thành tiền</th>
-            <th style="width: 80px"></th>
+            <th style="width: 320px">Thành tiền</th>
+            <th style="width: 100px"></th>
           </tr>
           <tr v-for="item in dataSources" :key="item.id">
             <td class="flex-item just-center">
@@ -42,7 +42,7 @@
               </div>
             </td>
             <td>{{ item.SizeProduct }}</td>
-            <td>
+            <td style="text-align: center;">
               <div class="product__detail-num m-t-0">
                 <i
                   class="fa-solid fa-minus product__detail-remove"
