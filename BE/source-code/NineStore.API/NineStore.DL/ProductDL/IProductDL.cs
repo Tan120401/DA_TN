@@ -10,6 +10,6 @@ namespace NineStore.DL.ProductDL
 {
     public interface IProductDL : IBaseDL<Product>
     {
-        public List<Product> GetAllProduct(Guid? categoryId, string? order);
+        public List<Product> GetAllProduct(Guid? categoryId, string? order, string? keyword);
     }
 }

@@ -19,13 +19,13 @@ namespace NineStore.DL.BaseDL
         public List<T> GetAllRecord();
 
         public dynamic GetRecordByFilterAndPaging(int pageSize, int pageNumber, string? keyword);
-            /// <summary>
-            /// Tìm bản ghi theo ID
-            /// </summary>
-            /// <param name="recordId">ID bản ghi cần tìm kiếm</param>
-            /// <returns>Bản ghi cần tìm kiếm</returns>
-            /// Created by: NVTan (16/01/2023)
-            List<T> GetRecordById(Guid recordId);
+        /// <summary>
+        /// Tìm bản ghi theo ID
+        /// </summary>
+        /// <param name="recordId">ID bản ghi cần tìm kiếm</param>
+        /// <returns>Bản ghi cần tìm kiếm</returns>
+        /// Created by: NVTan (16/01/2023)
+        List<T> GetRecordById(Guid recordId);
 
         /// <summary>
         /// Thêm mới một bản ghi

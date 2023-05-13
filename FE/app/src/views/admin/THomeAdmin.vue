@@ -14,13 +14,17 @@
         :content="orderShipping"
       ></TOrderReport>
       <TOrderReport
+        :title="'Tổng số đơn hàng đã giao'"
+        :content="orderSuccess.length"
+      ></TOrderReport>
+      <TOrderReport
         :title="'Tổng số đơn hàng đã hủy'"
         :content="orderRejected"
       ></TOrderReport>
     </div>
     <div>
-      <h5 class="mt-3">Thống kê số đơn hàng đã hoàn thành theo tháng</h5>
-      <TLine v-if="label.length" :label="label" :data="data"></TLine>
+      <h5 class="mt-3">Thống kê doanh thu theo tháng</h5>
+      <TLine v-if="loading" :label="label" :data="data"></TLine>
     </div>
   </div>
 </template>
@@ -32,6 +36,7 @@ import TPopupVue from "@/components/TPopup.vue";
 import TOrderReport from "@/components/TOrderReport.vue";
 import TLine from "@/components/TLine.vue";
 import AXIOS_ORDER from "@/api/order";
+import AXIOS_BILL from "@/api/bill";
 import { FILTER_OPTION } from "@/js/constrant";
 import { ref, reactive } from "vue";
 export default {
@@ -49,9 +54,9 @@ export default {
     const orderShipping = ref(0);
     const orderRejected = ref(0);
     const orderSuccess = ref([]);
-    const takenValues = {};
-    const label = ref([]);
+    const label = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     const data = ref([]);
+    const loading = ref(false);
     const getAllOrderByFilter = async (params) => {
       try {
         let response = await AXIOS_ORDER.getAllOrderServicebyFilter(params);
@@ -71,38 +76,40 @@ export default {
               orderRejected.value += 1;
             }
           }
-          for (var i = 0; i < orderSuccess.value.length; i++) {
-            console.log(orderSuccess.value[i].CreatedDate);
-            const date = new Date(orderSuccess.value[i].CreatedDate);
-            const value = date.getMonth() + 1;
-            if (!takenValues[value]) {
-              takenValues[value] = true;
-              label.value.push(value);
-            }
-          }
-          label.value.sort((a, b) => a - b);
-
           for (var i = 0; i < label.value.length; i++) {
-            let num = 0;
+            sumPrice = 0;
             for (var j = 0; j < orderSuccess.value.length; j++) {
               const date = new Date(orderSuccess.value[j].CreatedDate);
               const value = date.getMonth() + 1;
               if (value == label.value[i]) {
-                num += 1;
+                await getBillByOrderId(orderSuccess.value[j].OrderId);
               }
             }
-            data.value.push(num);
+            data.value.push(sumPrice);
           }
+          loading.value = true;
         }
       } catch (error) {
         console.log(error);
+      }
+    };
+    var sumPrice = 0;
+    const getBillByOrderId = async (param) => {
+      try {
+        let response = await AXIOS_BILL.getBillById(param);
+        if (response) {
+          sumPrice += response.data[0].SumPrice;
+        }
+      } catch (err) {
+        console.log(err);
       }
     };
     filterOption.pageSize = 999;
     getAllOrderByFilter(filterOption);
 
     return {
-      takenValues,
+      loading,
+      getBillByOrderId,
       label,
       data,
       filterOption,

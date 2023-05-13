@@ -1,19 +1,10 @@
 <template>
   <header class="p-3 bg-dark text-white" style="width: 100%">
     <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-between">
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input
-            type="search"
-            class="form-control form-control-dark"
-            placeholder="Tìm kiếm..."
-            aria-label="Search"
-          />
-        </form>
-        <div class="dropdown">
+      <div class="d-flex flex-wrap align-items-center justify-content-end">
+        <div class="dropdown text-end">
           <a
-            href="#"
-            class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+            class="d-block link-dark text-decoration-none dropdown-toggle"
             id="dropdownUser1"
             data-bs-toggle="dropdown"
             aria-expanded="false"
@@ -29,20 +20,20 @@
               height="32"
               class="rounded-circle me-2"
             />
-            <strong>Nguyễn Văn Tân</strong>
+            <strong class="text-white">Nguyễn Văn Tân</strong>
           </a>
           <ul
-            class="dropdown-menu dropdown-menu-dark text-small shadow"
+            class="dropdown-menu dropdown-menu text-small shadow"
             aria-labelledby="dropdownUser1"
           >
-            <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+            <li><a class="dropdown-item">Cài đặt</a></li>
             <router-link :to="`/Profile/${store.state.userInfo.UserId}`"
               ><li>
-                <a class="dropdown-item" href="#">Thông tin cá nhân</a>
+                <a class="dropdown-item">Thông tin cá nhân</a>
               </li></router-link
             >
             <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+            <li><a class="dropdown-item" @click="logout">Đăng xuất</a></li>
           </ul>
         </div>
       </div>
@@ -52,11 +43,18 @@
 
 <script>
 import { useStore } from "vuex";
+import { watch, ref } from "vue";
+import router from "@/router/router";
 export default {
   name: "THeaderAdmin",
   setup() {
     const store = useStore();
+    const logout = () => {
+      store.dispatch("setLogout");
+      router.push({ path: "/" });
+    };
     return {
+      logout,
       store,
     };
   },

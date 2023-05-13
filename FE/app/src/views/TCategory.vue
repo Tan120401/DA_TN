@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <THeader></THeader>
-    <TContent :categoryId="route.params.id"></TContent>
+    <TContent></TContent>
     <TFooter></TFooter>
     <router-view />
   </div>
@@ -12,6 +12,7 @@ import THeader from "@/layout/THeader.vue";
 import TFooter from "@/layout/TFooter.vue";
 import TContent from "@/layout/TContent.vue";
 import { useRoute } from "vue-router";
+import { computed } from "vue";
 export default {
   name: "TCategory",
   components: {
@@ -20,7 +21,7 @@ export default {
     TContent,
   },
   setup() {
-    const route = useRoute();
+    const route = useRoute(); 
     return {
       route,
     };

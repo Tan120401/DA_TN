@@ -1,7 +1,11 @@
 <template>
   <div id="main">
     <THeader></THeader>
-    <section id="user__profile" style="background-color: #f4f5f7">
+    <section
+      id="user__profile"
+      style="background-color: #f4f5f7"
+      v-if="loading"
+    >
       <div class="container py-5 h-100 m-t-60">
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col col-lg-6 mb-4 mb-lg-0">
@@ -143,12 +147,12 @@ export default {
     const userInfor = ref();
     const route = useRoute();
     const imgUser = ref("");
-
+    const loading = ref(false);
     const isShowFormEdit = ref(false);
     const fileChange = reactive(_.cloneDeep(FILE_OPTIONS));
 
-    const getUserByIdAfterUpdate = (param) => {
-      $store.dispatch("getUserById", param);
+    const getUserByIdAfterUpdate = async (param) => {
+      await $store.dispatch("getUserById", param);
     };
 
     const onFileChange = (e) => {
@@ -164,10 +168,12 @@ export default {
       try {
         let response = await USER_AXIOS.getUserById(param);
         if (response) {
+          loading.value = false;
           userInfo.value = response.data[0];
           imgUser.value = response.data[0].ImgName
             ? require("../assets/img/user/" + response.data[0].ImgName)
             : require("../assets/img/user/avatar-null.jpeg");
+          loading.value = true;
         }
       } catch (err) {
         console.log(err);
@@ -214,6 +220,7 @@ export default {
             if (fileChange.FileName != null && fileChange.File != null) {
               await uploadFile(fileChange);
             }
+            console.log(route.params.id);
             getUserByIdAfterUpdate(route.params.id);
             getUserInfor(route.params.id);
             onHideFormEdit();
@@ -252,6 +259,7 @@ export default {
     };
 
     return {
+      loading,
       validateForm,
       isShowDuplicateUser,
       $store,

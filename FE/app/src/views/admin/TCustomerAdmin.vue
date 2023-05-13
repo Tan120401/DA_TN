@@ -2,12 +2,30 @@
   <div class="table-list">
     <div class="d-flex justify-content-between">
       <h4>Danh sách khách hàng</h4>
-      <button type="button" class="btn btn-primary" @click="onShowPopupAdd">
+
+      <button
+        type="button"
+        class="btn btn-sm btn-primary"
+        @click="onShowPopupAdd"
+      >
         Thêm khách hàng
       </button>
     </div>
+    <div class="input-group" style="width: 300px">
+      <span class="input-group-text" id="basic-addon1">
+        <i class="bi bi-search"></i>
+      </span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Tìm kiếm..."
+        aria-label="Input group example"
+        aria-describedby="basic-addon1"
+        v-model="keywordSearch"
+      />
+    </div>
     <div class="table-record-list">
-      <table class="table mt-3">
+      <table class="table mt-3" style="vertical-align: middle">
         <thead>
           <tr>
             <th scope="col">STT</th>
@@ -199,7 +217,7 @@
 </template>
   
 <script>
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import _ from "lodash";
 
 import TPopupVue from "@/components/TPopup.vue";
@@ -232,11 +250,24 @@ export default {
     const userEditData = ref([]);
     const totalPage = ref();
     const loading = ref(false);
-    const filerOption = reactive(_.cloneDeep(FILTER_OPTION));
+    const filterOption = reactive(_.cloneDeep(FILTER_OPTION));
+
+    /**
+     * Thay đổi từ khóa tìm kiếm gọi lại phân trang
+     */
+    const keywordSearch = ref();
+    watch(
+      keywordSearch,
+      _.debounce((newVal) => {
+        filterOption.keyWord = newVal;
+        filterOption.pageNumber = 1;
+        resetPaging();
+      }, 300)
+    );
 
     const onChangPageNumber = (item) => {
-      filerOption.pageNumber = item;
-      getAllUser(filerOption);
+      filterOption.pageNumber = item;
+      getAllUser(filterOption);
     };
 
     /**
@@ -334,10 +365,10 @@ export default {
         console.log(err);
       }
     };
-    getAllUser(filerOption);
+    getAllUser(filterOption);
     const resetPaging = () => {
-      filerOption.pageNumber = 1;
-      getAllUser(filerOption);
+      filterOption.pageNumber = 1;
+      getAllUser(filterOption);
     };
     /**
      * Ẩn popup thêm
@@ -384,12 +415,14 @@ export default {
         console.log(err);
       }
     };
+
     return {
+      keywordSearch,
       isShowDuplicateUser,
       resetPaging,
       onChangPageNumber,
       loading,
-      filerOption,
+      filterOption,
       updateToUser,
       onUpdateUser,
       onShowPopupUpdate,

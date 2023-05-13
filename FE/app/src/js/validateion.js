@@ -51,14 +51,14 @@ const validateInput = (input) => {
           inValid = true;
         } else if (val && !val.match(regexEmail)) {
           setup.isValidate = true;
-          setup.messageValidate = name + " không đúng định dạng.";
+          setup.messageValidate = name + " là một email.";
           inValid = true;
         } else {
           inValid = false;
         }
       } else if (rules[i] == "Password") {
         const regexPassword = new RegExp(
-          "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
+          "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
         );
         if (!val || val.trim() == "") {
           setup.isValidate = true;
@@ -67,7 +67,7 @@ const validateInput = (input) => {
         } else if (val && !regexPassword.test(val)) {
           setup.isValidate = true;
           setup.messageValidate =
-            " Tối thiểu 8 ký tự và có chứa ít nhất một chữ cái và một chữ số";
+            " Tối thiểu 8 ký tự và có chứa ít nhất một chữ cái và ký tự đặc biệt";
           inValid = true;
         } else {
           inValid = false;

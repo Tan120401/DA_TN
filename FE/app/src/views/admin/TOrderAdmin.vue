@@ -3,15 +3,28 @@
     <div class="d-flex justify-content-between">
       <h4>Danh sách đơn hàng</h4>
     </div>
+    <div class="input-group" style="width: 300px">
+      <span class="input-group-text" id="basic-addon1">
+        <i class="bi bi-search"></i>
+      </span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Tìm kiếm..."
+        aria-label="Input group example"
+        aria-describedby="basic-addon1"
+        v-model="keywordSearch"
+      />
+    </div>
     <div class="table-record-list">
-      <table class="table mt-3">
+      <table class="table mt-3" style="vertical-align: middle">
         <thead>
           <tr>
             <th scope="col">Mã đơn hàng</th>
             <th scope="col">Người đặt hàng</th>
             <th scope="col">Ngày đặt</th>
             <th scope="col">Ngày sửa</th>
-            <th scope="col" style="text-align: center;">Trạng thái</th>
+            <th scope="col" style="text-align: center">Trạng thái</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -166,7 +179,7 @@
 </template>
   
 <script>
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, watch } from "vue";
 import _ from "lodash";
 
 import TPopupVue from "@/components/TPopup.vue";
@@ -203,6 +216,22 @@ export default {
     const isShowReason = ref(false);
     const reasonContent = ref();
 
+    /**
+     * Thay đổi từ khóa tìm kiếm gọi lại phân trang
+     */
+    const keywordSearch = ref();
+    watch(
+      keywordSearch,
+      _.debounce((newVal) => {
+        filterOption.keyWord = newVal;
+        filterOption.pageNumber = 1;
+        getAllOrderByFilter(filterOption);
+      }, 300)
+    );
+
+    /**
+     * Lấy hóa đơn thông qua order id
+     */
     const getBillByOrderId = async (param) => {
       try {
         let response = await AXIOS_BILL.getBillById(param);
@@ -240,12 +269,11 @@ export default {
       // updateStatusOrder(orderSelected.value.OrderId, 3);
     };
     const onUpdateStatusOrder = () => {
-      console.log(orderSelected.value);
       if (orderSelected.value.Status == 0) {
         updateStatusOrder(orderSelected.value.OrderId, 1);
       } else if (orderSelected.value.Status == 1) {
         updateStatusOrder(orderSelected.value.OrderId, 2);
-      }else{
+      } else {
         hidePopup();
       }
     };
@@ -273,7 +301,6 @@ export default {
         let response = await AXIOS_ORDER.getOrderServiceByOrderId(param);
         if (response) {
           dataSources.value = response.data;
-          console.log(response.data);
         }
       } catch (err) {
         console.log(err);
@@ -303,7 +330,6 @@ export default {
           orderData.value = response.data.Data;
           totalPage.value = response.data.TotalPage;
           loading.value = true;
-          console.log(orderData.value);
         }
       } catch (err) {
         console.log(err);
@@ -377,6 +403,7 @@ export default {
       currency: "VND",
     });
     return {
+      keywordSearch,
       billDatas,
       getBillByOrderId,
       onConfirmReasonCancel,
@@ -411,12 +438,5 @@ export default {
 };
 </script>
   
-  <style>
-.table-list {
-  max-height: calc(100% - 70px - 40px);
-}
-.table-record-list {
-  height: 617px;
-  overflow-y: auto;
-}
+<style>
 </style>

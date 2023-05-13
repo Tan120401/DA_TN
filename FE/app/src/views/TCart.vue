@@ -42,7 +42,7 @@
               </div>
             </td>
             <td>{{ item.SizeProduct }}</td>
-            <td style="text-align: center;">
+            <td style="text-align: center">
               <div class="product__detail-num m-t-0">
                 <i
                   class="fa-solid fa-minus product__detail-remove"
@@ -174,6 +174,7 @@ export default {
     const productDetail = ref([]);
     const sizeOptions = ref([]);
     const isOverLoadNumProduct = ref(false);
+    const lstCartIdQuery = ref([]);
     /**
      * Thay đổi số lượng sản phẩm
      */
@@ -366,11 +367,14 @@ export default {
       if (isOverLoadNumProduct.value) {
         return;
       } else if (selected.value.length > 0) {
+        selected.value.forEach((item) => {
+          lstCartIdQuery.value.push(item.CartId);
+        });
+        console.log(lstCartIdQuery.value);
         router.push({
           path: "/Pay",
           query: {
-            value: JSON.stringify(selected.value),
-            sumPrice: sumPrice.value,
+            lstCarId: JSON.stringify(lstCartIdQuery.value),
           },
         });
       }
@@ -383,6 +387,7 @@ export default {
       currency: "VND",
     });
     return {
+      lstCartIdQuery,
       isOverLoadNumProduct,
       sizeOptions,
       getAllSizeProduct,

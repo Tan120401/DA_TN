@@ -42,13 +42,13 @@ export default {
               messageValidate.value = props.name + " không được để trống.";
             } else if (val && !val.match(regexEmail)) {
               isValidate.value = true;
-              messageValidate.value = props.name + " không đúng định dạng.";
+              messageValidate.value = props.name + " là một email.";
             } else {
               isValidate.value = false;
-            } 
+            }
           } else if (props.rules[i] == "Password") {
             const regexPassword = new RegExp(
-              "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
+              "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
             );
             if (!val || val.trim() == "") {
               isValidate.value = true;
@@ -56,7 +56,7 @@ export default {
             } else if (val && !regexPassword.test(val)) {
               isValidate.value = true;
               messageValidate.value =
-                " Tối thiểu 8 ký tự và có chứa ít nhất một chữ cái và một chữ số";
+                " Tối thiểu 8 ký tự và có chứa ít nhất một chữ cái và ký tự đặc biệt";
             } else {
               isValidate.value = false;
             }

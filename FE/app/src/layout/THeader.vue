@@ -5,31 +5,52 @@
         <router-link to="/"><h1>Nine Store</h1></router-link>
       </div>
       <ul class="header__nav">
-        <router-link :class="{ active: $route.name == 'Home' }" to="/"
+        <router-link
+          :class="{ active: $route.name == 'Home' }"
+          :to="{
+            path: `/`,
+            query: { keyword: keyword },
+          }"
           ><li>Trang chủ</li></router-link
         >
         <router-link
           v-for="(item, index) in lstCategory"
           :key="index"
           :class="{ active: $route.path == `/Category/${item.CategoryId}` }"
-          :to="`/Category/${item.CategoryId}`"
+          :to="{
+            path: `/Category/${item.CategoryId}`,
+            query: { keyword: keyword },
+          }"
           ><li>{{ item.CategoryName }}</li></router-link
         >
-        <router-link :class="{ active: $route.name == 'Contact' }" to="/"
+        <router-link
+          :class="{ active: $route.path == '/Contact' }"
+          to="/Contact"
           ><li>Liên hệ</li></router-link
         >
       </ul>
       <div class="d-flex align-items-center">
         <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input
-            type="search"
-            class="form-control"
-            placeholder="Tìm kiếm..."
-            aria-label="Search"
-          />
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">
+              <i class="bi bi-search"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Tìm kiếm..."
+              aria-label="Input group example"
+              aria-describedby="basic-addon1"
+              v-model="keyword"
+            />
+          </div>
         </form>
-        <router-link to="/Login"
-          ><strong v-if="!$store.state.isLogin">Đăng nhập</strong></router-link
+
+        <strong v-if="!$store.state.isLogin"
+          ><router-link to="/Login">Đăng nhập</router-link>/<router-link
+            to="/Register"
+            >Đăng ký</router-link
+          ></strong
         >
         <div class="dropdown text-end" v-if="$store.state.isLogin">
           <a
@@ -100,7 +121,7 @@ import router from "@/router/router";
 import { useStore } from "vuex";
 
 import AXIOS_CATEGORY from "@/api/category";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 export default {
   setup() {
     const $store = useStore();
@@ -109,6 +130,10 @@ export default {
       router.push({ path: "/" });
     };
     const lstCategory = ref([]);
+    const keyword = ref();
+    watch(keyword, (newVal) => {
+      router.push({ query: { keyword: keyword.value } });
+    });
     const getAllCategory = async () => {
       try {
         let response = await AXIOS_CATEGORY.getAllCategory();
@@ -121,6 +146,7 @@ export default {
     };
     getAllCategory();
     return {
+      keyword,
       logout,
       lstCategory,
       getAllCategory,

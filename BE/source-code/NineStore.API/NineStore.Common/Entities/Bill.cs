@@ -17,5 +17,6 @@ namespace NineStore.Common.Entities
         public string? PhoneNumber { get; set; }
         public string? Address { get; set; }
         public BillCode? IsPay { get; set; }
+        public double? SumPrice { get; set; }
     }
 }

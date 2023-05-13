@@ -24,10 +24,10 @@ namespace NineStore.BL.ProductBL
             _productDL = productDL;
         }
 
-        public List<Product> GetAllProduct(Guid? categoryId, string? order)
+        public List<Product> GetAllProduct(Guid? categoryId, string? order, string? keyword)
         {
             List<Product> products= new List<Product>();
-            products = _productDL.GetAllProduct(categoryId, order);
+            products = _productDL.GetAllProduct(categoryId, order,keyword);
             return products;
         }
     }

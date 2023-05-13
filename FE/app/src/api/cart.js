@@ -6,6 +6,10 @@ const AXIOS_CART = {
   async getCartByUserId(param) {
     return await axios.get(`${API}/get-cart/${param}`);
   },
+  async getCartById(param) {
+    return await axios.get(`https://localhost:7128/api/v1/CartResponses/${param}`);
+  },
+  
   async insertCart(params) {
     return await axios.post(API, params);
   },

@@ -19,7 +19,7 @@ export default {
 .orderitem-report{
     background-color: var(--primary-color);
     border-radius: 8px;
-    max-width: 25%;
+    max-width: 19%;
 }
 .orderitem-report span,
 .orderitem-report i{

@@ -21,10 +21,10 @@ namespace NineStore.API.Controllers
 
         #region Method
         [HttpGet("get-product")]
-        public IActionResult GetAllProductByCategory([FromQuery] Guid? categoryId, [FromQuery] string? order)
+        public IActionResult GetAllProductByCategory([FromQuery] Guid? categoryId, [FromQuery] string? order, [FromQuery] string? keyword)
         {
             List<Product> products = new List<Product>();
-            products = _productBL.GetAllProduct(categoryId, order);
+            products = _productBL.GetAllProduct(categoryId, order,keyword);
             if (products != null)
             {
                 return StatusCode(StatusCodes.Status201Created, products);

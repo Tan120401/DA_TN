@@ -9,6 +9,7 @@ const store = createStore({
       isLogin: false,
       userInfo: [],
       cart: [],
+      billInfo: [],
     };
   },
   getters: {},
@@ -50,6 +51,14 @@ const store = createStore({
         state.cart = null;
       }
     },
+    addToBill(state, payLoad) {
+      if (payLoad != false) {
+        state.billInfo = payLoad;
+        localStorage.setItem("billInfo", JSON.stringify(state.billInfo));
+      } else {
+        state.billInfo = null;
+      }
+    },
     initializeStore(state) {
       if (localStorage.getItem("isLogin")) {
         state.isLogin =
@@ -87,6 +96,9 @@ const store = createStore({
     },
     addToCart({ commit }, param) {
       commit("addToCart", param);
+    },
+    addToBill({ commit }, param) {
+      commit("addToBill", param);
     },
     setLogout({ commit }) {
       commit("Logout");

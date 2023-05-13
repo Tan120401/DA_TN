@@ -10,6 +10,8 @@ import TRegister from "@/views/TRegister";
 import TProfile from "@/views/TProfile";
 import TCategory from "@/views/TCategory";
 import TOrder from "@/views/TOrder";
+import TContact from "@/views/TContact";
+
 
 import THomeAdmin from "@/views/admin/THomeAdmin";
 import TCustomerAdmin from "@/views/admin/TCustomerAdmin";
@@ -23,6 +25,12 @@ const routes = [
     path: "/",
     name: "Home",
     component: THome,
+  },
+
+  {
+    path: "/Contact",
+    name: "Contact",
+    component: TContact,
   },
   {
     path: "/About",
@@ -64,6 +72,7 @@ const routes = [
     name: "Pay",
     component: TPay,
   },
+
   {
     path: "/Order/:id",
     name: "Order",

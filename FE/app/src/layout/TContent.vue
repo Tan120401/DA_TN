@@ -10,7 +10,7 @@
         :picture="item.ImgProduct"
         :productname="item.ProductName"
         :price="item.Price"
-        :pricediscount="(item.Price * (100 -item.Discount)/100)"
+        :pricediscount="(item.Price * (100 - item.Discount)) / 100"
       ></TProductitem>
     </div>
     <h1 class="product-title">Sản phẩm đang giảm giá</h1>
@@ -22,7 +22,7 @@
         :picture="item.ImgProduct"
         :productname="item.ProductName"
         :price="item.Price"
-        :pricediscount="(item.Price * (100 -item.Discount)/100)"
+        :pricediscount="(item.Price * (100 - item.Discount)) / 100"
       ></TProductitem>
     </div>
     <h1 class="product-title">Sản phẩm bán nhiều nhất</h1>
@@ -34,7 +34,7 @@
         :picture="item.ImgProduct"
         :productname="item.ProductName"
         :price="item.Price"
-        :pricediscount="(item.Price * (100 -item.Discount)/100)"
+        :pricediscount="(item.Price * (100 - item.Discount)) / 100"
       ></TProductitem>
     </div>
     <h1 class="news-title">Tin tức</h1>
@@ -59,6 +59,7 @@ import { FILTER_CATEGORY } from "@/js/constrant";
 
 import { reactive, ref, watch, watchEffect } from "vue";
 import _ from "lodash";
+import { useRoute } from "vue-router";
 export default {
   name: "TContent",
   components: {
@@ -66,14 +67,9 @@ export default {
     TBanner,
     TNewitem,
   },
-  props: {
-    categoryId: {
-      type: String,
-      default: null,
-    },
-  },
 
-  setup(props) {
+  setup() {
+    const route = useRoute();
     const productList = reactive(PRODUCTS);
     const newsList = reactive(NEWS);
     const productLatests = ref([]);
@@ -86,9 +82,9 @@ export default {
      * Hàm lấy danh sách sản phẩm tương ứng với danh mục
      * @param {id danh mục} param
      */
+
     const getProductLatest = async () => {
       try {
-        filterCategory.categoryId = props.categoryId;
         filterCategory.order = "CreatedDate";
         let response = await AXIOS_PRODUCT.getProductByCategory(filterCategory);
         productLatests.value = response.data;
@@ -102,7 +98,6 @@ export default {
      */
     const getProductSale = async () => {
       try {
-        filterCategory.categoryId = props.categoryId;
         filterCategory.order = "DisCount";
         let response = await AXIOS_PRODUCT.getProductByCategory(filterCategory);
         productSales.value = response.data;
@@ -116,7 +111,6 @@ export default {
      */
     const getProductBestSell = async () => {
       try {
-        filterCategory.categoryId = props.categoryId;
         filterCategory.order = "Quantity";
         let response = await AXIOS_PRODUCT.getProductByCategory(filterCategory);
         productBestSells.value = response.data;
@@ -128,11 +122,18 @@ export default {
      * Danh mục thay đổi gọi lại dữ liệu
      */
     watchEffect(() => {
+      filterCategory.keyword = route.query.keyword;
+      if (route.params.id) {
+        filterCategory.categoryId = route.params.id;
+      } else {
+        filterCategory.categoryId = null;
+      }
       getProductLatest();
       getProductSale();
       getProductBestSell();
     });
     return {
+      route,
       productList,
       newsList,
       productLatests,

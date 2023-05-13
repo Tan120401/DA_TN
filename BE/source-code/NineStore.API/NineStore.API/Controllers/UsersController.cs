@@ -143,10 +143,42 @@ namespace NineStore.API.Controllers
                 client.Disconnect(true);
             }
         }
+
+
+        private static readonly Random Random = new Random();
+
+        private const string LowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+        private const string UppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private const string NumericChars = "0123456789";
+        private const string SpecialChars = "#$%^&*()_+";
         private string GenerateNewPassword()
         {
-            string password = Guid.NewGuid().ToString("d").Substring(1, 8);
-            return password;
+            var password = new char[8];
+
+            // Add one lowercase character
+            password[Random.Next(0, password.Length)] = LowercaseChars[Random.Next(0, LowercaseChars.Length)];
+
+            // Add one uppercase character
+            password[Random.Next(0, password.Length)] = UppercaseChars[Random.Next(0, UppercaseChars.Length)];
+
+            // Add one numeric character
+            password[Random.Next(0, password.Length)] = NumericChars[Random.Next(0, NumericChars.Length)];
+
+            // Add one special character
+            password[Random.Next(0, password.Length)] = SpecialChars[Random.Next(0, SpecialChars.Length)];
+
+            // Fill in the remaining characters with random characters from all the character sets
+            for (var i = 0; i < password.Length; i++)
+            {
+                if (password[i] == default(char))
+                {
+                    var characterSets = new[] { LowercaseChars, UppercaseChars, NumericChars, SpecialChars };
+                    var randomCharSet = characterSets[Random.Next(0, characterSets.Length)];
+                    password[i] = randomCharSet[Random.Next(0, randomCharSet.Length)];
+                }
+            }
+
+            return new string(password);
         }
         [HttpPost("fogot-password")]
         public virtual IActionResult ForgotPassword(string userName)
@@ -161,7 +193,7 @@ namespace NineStore.API.Controllers
                     EmailDto request = new EmailDto();
                     request.To = userName;
                     request.Subject = "The NineStore xin chào quý khách!";
-                    request.Body = "Mật khẩu mới của quý khách là: "+ newPassword;
+                    request.Body = "Mật khẩu mới của quý khách là: " + newPassword;
                     SendEmail(request);
                     return StatusCode(StatusCodes.Status201Created);
                 }

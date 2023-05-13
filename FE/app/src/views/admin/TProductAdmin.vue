@@ -6,6 +6,19 @@
         Thêm sản phẩm
       </button>
     </div>
+    <div class="input-group" style="width: 300px">
+      <span class="input-group-text" id="basic-addon1">
+        <i class="bi bi-search"></i>
+      </span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Tìm kiếm..."
+        aria-label="Input group example"
+        aria-describedby="basic-addon1"
+        v-model="keywordSearch"
+      />
+    </div>
     <div class="table-record-list product-table-list">
       <table class="table mt-3">
         <thead>
@@ -51,7 +64,7 @@
               <button
                 type="button"
                 class="btn btn-primary me-2"
-                @click="onShowPopupUpdate(item)"
+                @click="onClickEdit(item.ProductId)"
               >
                 Sửa
               </button>
@@ -222,7 +235,7 @@
   </TPopup>
 </template>
   <script>
-import { onMounted, reactive, ref } from "vue";
+import { watch, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
@@ -247,7 +260,7 @@ export default {
   },
   setup() {
     const isLoading = ref(false);
-    const filerOption = reactive(_.cloneDeep(FILTER_OPTION));
+    const filterOption = reactive(_.cloneDeep(FILTER_OPTION));
     const productData = ref([]);
     const totalPage = ref();
     const isShowPopupAdd = ref(false);
@@ -266,6 +279,20 @@ export default {
         ProductId: null,
       },
     ]);
+
+    /**
+     * Thay đổi từ khóa tìm kiếm gọi lại phân trang
+     */
+    const keywordSearch = ref();
+    watch(
+      keywordSearch,
+      _.debounce((newVal) => {
+        filterOption.keyWord = newVal;
+        filterOption.pageNumber = 1;
+        getProductByFilter(filterOption);
+      }, 300)
+    );
+
     /**
      * Thêm kích thước và số lượng
      */
@@ -276,7 +303,6 @@ export default {
         Quantity: null,
         ProductId: productOption.value.ProductId,
       });
-      console.log(sizeOption.value);
     };
     /**
      * Bỏ kích thước và số lượng
@@ -367,7 +393,7 @@ export default {
         }
         insertToSize(sizeOption.value);
         hidePopup();
-        getProductByFilter(filerOption);
+        getProductByFilter(filterOption);
       }
     };
     /**
@@ -401,6 +427,14 @@ export default {
      * Hiện form thêm
      */
     const onShowAddProduct = () => {
+      sizeOption.value = [
+        {
+          SizeId: null,
+          SizeNumber: null,
+          Quantity: null,
+          ProductId: null,
+        },
+      ];
       lstImageProduct.value = [];
       productOption.value = _.cloneDeep(PRODUCT_OPTION);
       productOption.value.ProductId = uuidv4();
@@ -430,25 +464,26 @@ export default {
         console.log(error);
       }
     };
-    getProductByFilter(filerOption);
+    getProductByFilter(filterOption);
     /**
      * Thay đổi số trang
      */
     const onChangPageNumber = (value) => {
-      filerOption.pageNumber = value;
-      getProductByFilter(filerOption);
+      filterOption.pageNumber = value;
+      getProductByFilter(filterOption);
     };
     /**
      * Định dạng tình trạng sản phẩm
      */
     const formatStatus = (value) => {
       if (value == 0) {
-        return "Hết hàng";
+        return "Ngưng bán";
       } else if (value == 1) {
         return "Đang bán";
       }
     };
     return {
+      keywordSearch,
       uploadFile,
       insertToImage,
       lstImagePath,
@@ -466,7 +501,7 @@ export default {
       isLoading,
       onChangPageNumber,
       totalPage,
-      filerOption,
+      filterOption,
       productData,
       formatStatus,
       getProductByFilter,
@@ -482,12 +517,18 @@ export default {
   
   <style>
 .product-selling {
+  padding: 8px 0;
   border: 1px solid #11aa7a;
   color: #11aa7a;
   background-color: #b9f8e4;
   border-radius: 4px;
 }
 .product-soldout {
+  padding: 8px 0;
+  border: 1px solid #6153df;
+  color: #6153df;
+  background-color: rgb(97, 83, 223, 0.3);
+  border-radius: 4px;
 }
 .product-table-list tr {
   vertical-align: middle;

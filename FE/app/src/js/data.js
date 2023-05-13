@@ -52,7 +52,7 @@ const PRODUCT_OPTION = {
   Price: null,
   Discount: null,
   ImgProduct: null,
-  CategoryId: '142cb08f-7c31-21fa-8e90-67245e8b283e'
+  CategoryId: "142cb08f-7c31-21fa-8e90-67245e8b283e",
 };
 
 export { PRODUCT_OPTION, NEWS, USER, USER_REGISTER, FILE_OPTIONS };

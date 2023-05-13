@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using MySqlConnector;
+using NineStore.Common.Constants;
 using NineStore.Common.Entities;
 using NineStore.DL.BaseDL;
 using System;
@@ -26,5 +27,8 @@ namespace NineStore.DL.CartDL
             }
             return results;
         }
+
+        
+
     }
 }

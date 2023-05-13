@@ -7,6 +7,7 @@
 </template> 
 
 <script>
+import { useRoute } from "vue-router";
 import THeader from "@/layout/THeader.vue";
 import TFooter from "@/layout/TFooter.vue";
 import TContent from "@/layout/TContent.vue";
@@ -17,7 +18,12 @@ export default {
     TFooter,
     TContent,
   },
-  setup() {},
+  setup() {
+    const route = useRoute();
+    return {
+      route,
+    };
+  },
 };
 </script>
 

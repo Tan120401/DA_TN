@@ -9,6 +9,7 @@ const formatter = new Intl.NumberFormat("vi-VN", {
 const FILTER_CATEGORY = {
   categoryId: null,
   order: null,
+  keyWord: null,
 };
 const CART_OPTIONS = {
   CartId: null,
@@ -36,6 +37,7 @@ const BILL_OPTION = {
   UserName: null,
   Address: null,
   PhoneNumber: null,
+  SumPrice: 0,
 };
 
 const FILTER_OPTION = {

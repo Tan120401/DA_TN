@@ -20,7 +20,7 @@ namespace NineStore.DL.ProductDL
         /// </summary>
         /// <returns>Danh sách record</returns>
         /// Created by: NVTan (09/02/2023)
-        public  List<Product> GetAllProduct(Guid? categoryId, string? order)
+        public  List<Product> GetAllProduct(Guid? categoryId, string? order, string? keyword)
         {
             //Chuẩn bị tên stored procedure
             string storedProcedureName = String.Format(ProcedureName.Get, typeof(Product).Name, "All");
@@ -28,6 +28,7 @@ namespace NineStore.DL.ProductDL
             var parameters = new DynamicParameters();
             parameters.Add("p_CategoryId", categoryId);
             parameters.Add("p_Order", order);
+            parameters.Add("p_Keyword", keyword);
             // Khởi tạo kết nối tới Database
             List<Product> listRecords;
             using (var mySqlConnection = new MySqlConnection(DataContext.ConnectionString))

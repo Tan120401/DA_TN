@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <Line :options="options" :data="data" style="width: 100%; height: 450px" />
   </div>
 </template>
@@ -44,7 +44,7 @@ export default {
         labels: Object.values(props.label),
         datasets: [
           {
-            label: "Thống kê đơn hàng",
+            label: "Thống kê doanh thu theo tháng",
             backgroundColor: "#8bbdcf",
             data: props.data,
           },

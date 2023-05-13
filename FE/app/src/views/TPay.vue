@@ -119,7 +119,7 @@
           <div class="pay__content-footer">
             <div class="flex-item justify-between">
               <h4>Tổng thanh toán:</h4>
-              <span>{{ formatter.format(route.query.sumPrice) }}</span>
+              <span>{{ formatter.format(sumPrice) }}</span>
             </div>
             <button class="tbutton pay-btn m-t-20" @click="onBuyNow">
               Thanh toán
@@ -134,7 +134,7 @@
 
 <script>
 import { useRoute } from "vue-router";
-import { computed, ref, reactive, watch } from "vue";
+import { computed, ref, reactive, watch, onMounted, beforeMounted } from "vue";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 
@@ -151,8 +151,11 @@ import AXIOS_ORDER from "@/api/order";
 import AXIOS_ORDER_DETAIL from "@/api/orderdetail";
 import AXIOS_BILL from "@/api/bill";
 import AXIOS_CART from "@/api/cart";
-import store from "@/vuex/store";
+import AXIOS_MOMO from "@/api/momo";
+
 import router from "@/router/router";
+import { useStore } from "vuex";
+import { notification } from "ant-design-vue";
 export default {
   name: "TPay",
   components: {
@@ -161,8 +164,9 @@ export default {
     TInput,
   },
   setup() {
+    const store = useStore();
     const route = useRoute();
-    const cartProduct = ref();
+    const cartProduct = ref([]);
     const isPay = ref(false);
     const validateForm = ref(null);
     const billOptions = reactive(_.cloneDeep(BILL_OPTION));
@@ -172,26 +176,82 @@ export default {
     /**
      * Nhận giá trị thông qua router query
      */
-    cartProduct.value = JSON.parse(route.query.value);
-    let cartLists = [];
-    cartProduct.value.forEach((item, index) => {
-      cartLists.push(item.CartId);
+    listCartId.value = JSON.parse(route.query.lstCarId);
+    const getAllCartSelected = async (param) => {
+      try {
+        let response = await AXIOS_CART.getCartById(param);
+        if (response) {
+          cartProduct.value.push(response.data[0]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    listCartId.value.forEach((item) => {
+      getAllCartSelected(item);
     });
-    listCartId.value = cartLists;
 
+    const sumPrice = computed(() => {
+      var sum = 0;
+      for (let key in cartProduct.value) {
+        sum +=
+          cartProduct.value[key].NumProduct *
+          cartProduct.value[key].Price *
+          (1 - cartProduct.value[key].Discount / 100);
+      }
+      return sum;
+    });
     /**
      * Thanh toán khi nhận hàng
      */
     const paymentOnDelivery = () => {
       isPay.value = !isPay.value;
     };
+    const paymentByMomo = async (params) => {
+      try {
+        let response = await AXIOS_MOMO.paymentMomo(params);
+        if (response) {
+          console.log(response.data);
+          window.location.href = response.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
     /**
      * Thanh toán qua thẻ ngân hàng
      */
     const paymentViaCard = () => {
+      store.dispatch("addToBill", billOptions);
       isPay.value = !isPay.value;
-      console.log(isPay.value);
+      paymentByMomo({
+        amount: "100000",
+        returnUrl: window.location.href,
+      });
     };
+    onMounted(() => {
+      const urlParams = new URLSearchParams(window.location.href.split("?")[1]);
+      const errorCode = urlParams.get("errorCode");
+      if (errorCode && errorCode == 0) {
+        Object.assign(
+          billOptions,
+          JSON.parse(localStorage.getItem("billInfo"))
+        );
+        isPay.value = true;
+        notification.success({ message: "Thanh toán thành công" });
+        setTimeout(async () => {
+          await onBuyNow();
+          console.log("test pay");
+        }, 1000);
+      } else if (errorCode && errorCode == 42) {
+        Object.assign(
+          billOptions,
+          JSON.parse(localStorage.getItem("billInfo"))
+        );
+        isPay.value = false;
+        notification.error({ message: "Thanh toán thất bại" });
+      }
+    });
     /**
      * Xóa sản phẩm đã thanh toán ở trong giỏ hàng
      */
@@ -216,6 +276,7 @@ export default {
         if (response) {
           if (response) {
             billOptions.OrderId = orderOptions.OrderId;
+            billOptions.SumPrice = sumPrice;
             insertToBill(billOptions);
           }
         }
@@ -261,27 +322,33 @@ export default {
      * Click thanh toán
      */
     const onBuyNow = () => {
-      if (isPay.value) {
-        billOptions.IsPay = 1;
-      } else {
-        billOptions.IsPay = 0;
-      }
-      orderOptions.UserId = store.state.userInfo.UserId;
-      orderOptions.OrderId = uuidv4();
       /**
        * Validate
        */
       var lstInput = validateForm.value.querySelectorAll("input");
       var inValid = validateData(lstInput);
       if (inValid.isValidate) {
+        orderOptions.UserId = store.state.userInfo.UserId;
+        orderOptions.OrderId = uuidv4();
+        if (isPay.value) {
+          billOptions.IsPay = 1;
+        } else {
+          billOptions.IsPay = 0;
+        }
         insertToOrder(orderOptions);
       }
     };
+
     const formatter = new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
     });
+
     return {
+      store,
+      sumPrice,
+      getAllCartSelected,
+      paymentByMomo,
       validateForm,
       insertToOrder,
       insertToOrderDetail,
