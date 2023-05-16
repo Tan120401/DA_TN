@@ -9,6 +9,12 @@ namespace NineStore.API.Controllers
     [ApiController]
     public class MomosController : ControllerBase
     {
+        /// <summary>
+        /// Hàm xử lý thanh toán momo
+        /// </summary>
+        /// <param name="amounts">Số tiền</param>
+        /// <param name="returnUrls">Url Redirect</param>
+        /// <returns>url trang test dữ liệu</returns>
         [HttpPost("pay-momo")]
         public async Task<IActionResult> PostMomo(string amounts, string returnUrls)
         {

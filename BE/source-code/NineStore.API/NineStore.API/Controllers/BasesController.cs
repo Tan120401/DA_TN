@@ -232,7 +232,8 @@ namespace NineStore.API.Controllers
             }
         }
         [HttpDelete("delete-mulpty")]
-        public IActionResult DeleteRecordMulpty(List<Guid> recordIds) {
+        public IActionResult DeleteRecordMulpty(List<Guid> recordIds)
+        {
             try
             {
                 int result = _baseBL.DeleteRecordMulpty(recordIds);
@@ -280,6 +281,13 @@ namespace NineStore.API.Controllers
             return "";
         }
 
+        /// <summary>
+        /// Hàm tìm kiếm và phân trang dữ liệu
+        /// </summary>
+        /// <param name="keyWord">Từ khóa tìm kiếm</param>
+        /// <param name="pageSize">Số bản ghi trên 1 trang</param>
+        /// <param name="pageNumber">Trang hiện tại</param>
+        /// <returns></returns>
         [HttpPost("PagingAndFilter")]
         public IActionResult GetRecordByFilterAndPaging(
             [FromQuery] string? keyWord,
@@ -291,19 +299,8 @@ namespace NineStore.API.Controllers
             {
                 dynamic records = _baseBL.GetRecordByFilterAndPaging(pageSize, pageNumber, keyWord);
 
-                if (records.Data.Count > 0)
-                {
-                    return StatusCode(StatusCodes.Status200OK, records);
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status200OK, new ErrorResult
-                    {
-                        ErrorCode = ErrorCode.NoData,
-                        DevMsg = Resource.ErrorToDL,
-                        UserMsg = Resource.ErrorToDL,
-                    });
-                }
+                return StatusCode(StatusCodes.Status200OK, records);
+
             }
             catch (Exception ex)
             {
@@ -316,7 +313,6 @@ namespace NineStore.API.Controllers
                 });
             }
         }
-
 
         #endregion
     }

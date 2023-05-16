@@ -23,6 +23,11 @@ namespace NineStore.API.Controllers
             
         }
 
+        /// <summary>
+        /// Hàm chèn nhiều kích thước thuộc 1 sản phẩm
+        /// </summary>
+        /// <param name="Sizes"></param>
+        /// <returns></returns>
         [HttpPost("insert-mulpty")]
         public IActionResult InsertMupltySize(List<Size> Sizes)
         {
@@ -49,6 +54,11 @@ namespace NineStore.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Hàm lấy thông tin kích thước thông qua id sản phẩm
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
         [HttpGet("get-by-productid/{productId}")]
         public IActionResult GetSizeByProductId(Guid productId)
         {
@@ -74,6 +84,7 @@ namespace NineStore.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// Xử lý ngoại lệ trả về lỗi
         /// </summary>

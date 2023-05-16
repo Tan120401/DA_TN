@@ -17,6 +17,7 @@ const CART_OPTIONS = {
   UserId: null,
   SizeProduct: null,
   NumProduct: null,
+  SizeId: null,
 };
 const ORDER_OPTIONS = {
   OrderId: null,

@@ -21,6 +21,11 @@ namespace NineStore.API.Controllers
             _emailService = emailService;
         }
 
+        /// <summary>
+        /// Hàm gửi email
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult SendEmail(EmailDto request)
         {

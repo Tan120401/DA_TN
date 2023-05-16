@@ -24,7 +24,7 @@
         </li></router-link
       >
       <router-link to="/Admin/Customer">
-        <li>
+        <li v-if="store.state.userInfo.Role == 'master admin'">
           <a
             href="#"
             class="nav-link text-white"
@@ -32,7 +32,7 @@
             aria-current="page"
           >
             <i class="bi me-2 bi-person-circle"></i>
-            Người dùng
+            Quản lý người dùng
           </a>
         </li></router-link
       >
@@ -45,7 +45,7 @@
             aria-current="page"
           >
             <i class="bi me-2 bi-table"></i>
-            Đơn hàng
+            Quản lý đơn hàng
           </a>
         </li></router-link
       >
@@ -54,53 +54,31 @@
           <a
             href="#"
             class="nav-link text-white"
-            :class="{ active: $route.name == 'ProductAdmin' }"
+            :class="{
+              active:
+                $route.name == 'ProductAdmin' || $route.name == 'ProductUpdate',
+            }"
             aria-current="page"
           >
             <i class="bi me-2 bi-grid-fill"></i>
-            Sản phẩm
+            Quản lý sản phẩm
           </a>
         </li></router-link
       >
-
-      <!-- <router-link to="/Admin/Report">
-        <li>
-          <a
-            href="#"
-            class="nav-link text-white"
-            :class="{ active: $route.name == 'ReportAdmin' }"
-            aria-current="page"
-          >
-            <i class="bi me-2 bi-pie-chart"></i>
-            Thống kê báo cáo
-          </a>
-        </li></router-link
-      > -->
-      <!-- <li class="mb-1">
-        <button
-          class="btn btn-toggle align-items-center rounded nav-link text-white"
-          data-bs-toggle="collapse"
-          data-bs-target="#home-collapse"
-          aria-expanded="true"
-        >
-          <i class="bi me-2 bi-grid-fill"></i>
-          Home
-        </button>
-        <div class="collapse show" id="home-collapse" style="">
-          <ul class="btn-toggle-nav list-unstyled" style="margin-left: 42px">
-            <li class="mb-1"><a href="#" class="text-white">Danh sách sản phẩm</a></li>
-            <li class="mb-1"><a href="#" class="text-white">Thêm sản phẩm</a></li>
-            <li class="mb-1"><a href="#" class="text-white">Reports</a></li>
-          </ul>
-        </div>
-      </li> -->
     </ul>
   </div>
 </template>
 
 <script>
+import { useStore } from "vuex";
 export default {
   name: "TSidebar",
+  setup() {
+    const store = useStore();
+    return {
+      store,
+    };
+  },
 };
 </script>
 

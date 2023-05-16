@@ -20,7 +20,7 @@
               height="32"
               class="rounded-circle me-2"
             />
-            <strong class="text-white">Nguyễn Văn Tân</strong>
+            <strong class="text-white">{{ store.state.userInfo.FullName }}</strong>
           </a>
           <ul
             class="dropdown-menu dropdown-menu text-small shadow"

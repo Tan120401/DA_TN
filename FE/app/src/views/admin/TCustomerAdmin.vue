@@ -1,14 +1,13 @@
 <template>
   <div class="table-list">
     <div class="d-flex justify-content-between">
-      <h4>Danh sách khách hàng</h4>
-
+      <h4>Danh sách người dùng</h4>
       <button
         type="button"
         class="btn btn-sm btn-primary"
         @click="onShowPopupAdd"
       >
-        Thêm khách hàng
+        Thêm người dùng
       </button>
     </div>
     <div class="input-group" style="width: 300px">
@@ -63,7 +62,7 @@
         </tbody>
       </table>
     </div>
-    <div v-if="loading">
+    <div v-if="!isLoading">
       <t-paging
         :totalPage="totalPage"
         @onChangPageNumber="onChangPageNumber"
@@ -72,7 +71,7 @@
     </div>
   </div>
   <TPopupVue
-    popupTile="Thêm khách hàng"
+    popupTile="Thêm người dùng"
     @hidePopup="hidePopup"
     v-if="isShowPopupAdd"
   >
@@ -125,6 +124,7 @@
             >
               <option selected>user</option>
               <option>admin</option>
+              <option>master admin</option>
             </select>
           </div>
         </div>
@@ -140,7 +140,7 @@
     </template>
   </TPopupVue>
   <TPopupVue
-    popupTile="Sửa thông tin khách hàng"
+    popupTile="Sửa thông tin người dùng"
     @hidePopup="hidePopup"
     v-if="isShowPopupUpdate"
   >
@@ -184,7 +184,7 @@
               :rules="['Password']"
             ></TInput>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">Role</label>
             <select
               id="inputState"
@@ -193,6 +193,7 @@
             >
               <option selected>user</option>
               <option>admin</option>
+              <option>master admin</option>
             </select>
           </div>
         </div>
@@ -214,6 +215,10 @@
     @handleClick="deleteUserById"
     @hidePopup="hidePopup"
   ></TPopupVue>
+  <TLoading v-if="isLoading"></TLoading>
+  <div v-if="isShowNoData" class="text-nodata">
+    Không có người dùng nào thỏa mãn.
+  </div>
 </template>
   
 <script>
@@ -225,6 +230,7 @@ import TInput from "@/components/TInput.vue";
 
 import AXIOS_USER from "@/api/user";
 import { USER_REGISTER } from "@/js/data";
+import TLoading from "@/components/TLoading.vue";
 
 import { validateData } from "@/js/validateion";
 
@@ -237,6 +243,7 @@ export default {
     TPopupVue,
     TInput,
     TPaging,
+    TLoading,
   },
   setup() {
     const isShowDuplicateUser = ref(false);
@@ -249,7 +256,8 @@ export default {
     const validateForm = ref();
     const userEditData = ref([]);
     const totalPage = ref();
-    const loading = ref(false);
+    const isLoading = ref(true);
+    const isShowNoData = ref(false);
     const filterOption = reactive(_.cloneDeep(FILTER_OPTION));
 
     /**
@@ -323,23 +331,25 @@ export default {
     };
 
     /**
-     * Thêm người dùng
+     * Ấn thêm
      */
     const onAddCustomer = () => {
       var lstInput = validateForm.value.querySelectorAll("input");
-      console.log(lstInput);
       var inValid = validateData(lstInput);
       if (inValid.isValidate) {
         insertToUser(userOptions.value);
       }
     };
+    /**
+     * Hàm thêm tài khoản
+     */
     const insertToUser = async (params) => {
       try {
         let response = await AXIOS_USER.setRegister(params);
         if (response) {
           hidePopup();
           resetPaging();
-          notification.success({ message: "Sửa thành công" });
+          notification.success({ message: "Thêm thành công" });
         }
       } catch (err) {
         console.log(err);
@@ -356,10 +366,18 @@ export default {
     const getAllUser = async (params) => {
       try {
         let response = await AXIOS_USER.getUserByFilter(params);
+        isLoading.value = true;
         if (response) {
           totalPage.value = response.data.TotalPage;
           userData.value = response.data.Data;
-          loading.value = true;
+          setTimeout(() => {
+            isLoading.value = false;
+          }, 500);
+          if (totalPage.value < 1) {
+            isShowNoData.value = true;
+          } else {
+            isShowNoData.value = false;
+          }
         }
       } catch (err) {
         console.log(err);
@@ -417,11 +435,12 @@ export default {
     };
 
     return {
+      isShowNoData,
       keywordSearch,
       isShowDuplicateUser,
       resetPaging,
       onChangPageNumber,
-      loading,
+      isLoading,
       filterOption,
       updateToUser,
       onUpdateUser,

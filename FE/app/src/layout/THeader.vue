@@ -64,6 +64,7 @@
               >Hi! {{ $store.state.userInfo.FullName }}</strong
             >
             <img
+              v-if="$store.state.userInfo.ImgName"
               :src="
                 require(`../assets/img/user/${
                   $store.state.userInfo.ImgName || 'avatar-null.jpeg'
@@ -100,7 +101,7 @@
                 <a
                   class="dropdown-item"
                   href="#"
-                  v-if="$store.state.userInfo.Role == 'admin'"
+                  v-if="$store.state.userInfo.Role != 'user'"
                   >Quản lý</a
                 >
               </li></router-link
@@ -119,7 +120,7 @@
 <script>
 import router from "@/router/router";
 import { useStore } from "vuex";
-
+import _ from "lodash";
 import AXIOS_CATEGORY from "@/api/category";
 import { ref, watch } from "vue";
 export default {
@@ -131,9 +132,12 @@ export default {
     };
     const lstCategory = ref([]);
     const keyword = ref();
-    watch(keyword, (newVal) => {
-      router.push({ query: { keyword: keyword.value } });
-    });
+    watch(
+      keyword,
+      _.debounce((newVal) => {
+        router.push({ query: { keyword: keyword.value } });
+      }, 300)
+    );
     const getAllCategory = async () => {
       try {
         let response = await AXIOS_CATEGORY.getAllCategory();

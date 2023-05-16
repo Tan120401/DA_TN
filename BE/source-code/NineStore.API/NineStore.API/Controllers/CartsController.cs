@@ -22,6 +22,12 @@ namespace NineStore.API.Controllers
         }
 
         #region Method
+        
+        /// <summary>
+        /// Hàm lấy thông tin cart thông qua user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet("get-cart/{userId}")]
         public IActionResult GetCartByUserId(Guid? userId)
         {

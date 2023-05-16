@@ -51,9 +51,6 @@ namespace NineStore.Common.Entities
         /// Ảnh sản phẩm
         /// </summary>
         public string? ImgProduct { get; set; }
-        
-      
-        
-        
+
     }
 }

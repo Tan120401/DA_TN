@@ -61,7 +61,7 @@
         </tbody>
       </table>
     </div>
-    <div v-if="loading">
+    <div v-if="!isLoading">
       <t-paging
         :totalPage="totalPage"
         @onChangPageNumber="onChangPageNumber"
@@ -176,6 +176,11 @@
       </button>
     </template>
   </TPopupVue>
+
+  <TLoading v-if="isLoading"></TLoading>
+  <div v-if="isShowNoData" class="text-nodata">
+    Không có đơn hàng nào thỏa mãn.
+  </div>
 </template>
   
 <script>
@@ -188,6 +193,7 @@ import AXIOS_ORDER from "@/api/order";
 import AXIOS_BILL from "@/api/bill";
 import moment from "moment";
 import TPaging from "@/components/TPaging.vue";
+import TLoading from "@/components/TLoading.vue";
 import { FILTER_OPTION } from "@/js/constrant";
 import { notification } from "ant-design-vue/lib/components";
 import { validateData } from "@/js/validateion";
@@ -197,13 +203,15 @@ export default {
     TPopupVue,
     TInput,
     TPaging,
+    TLoading,
   },
   setup() {
     const validateForm = ref(null);
     const orderData = ref();
     const isShowPopupOrderDetail = ref(false);
     const isShowPopupDelete = ref(false);
-    const loading = ref(false);
+    const isLoading = ref(false);
+    const isShowNoData = ref(false);
     const totalPage = ref();
     const filterOption = reactive(_.cloneDeep(FILTER_OPTION));
     const dataSources = ref();
@@ -326,10 +334,18 @@ export default {
     const getAllOrderByFilter = async (params) => {
       try {
         let response = await AXIOS_ORDER.getAllOrderServicebyFilter(params);
+        isLoading.value = true;
         if (response) {
           orderData.value = response.data.Data;
           totalPage.value = response.data.TotalPage;
-          loading.value = true;
+          setTimeout(() => {
+            isLoading.value = false;
+          }, 500);
+          if (totalPage.value < 1) {
+            isShowNoData.value = true;
+          } else {
+            isShowNoData.value = false;
+          }
         }
       } catch (err) {
         console.log(err);
@@ -418,7 +434,8 @@ export default {
       sumPrice,
       dataSources,
       onChangPageNumber,
-      loading,
+      isLoading,
+      isShowNoData,
       totalPage,
       filterOption,
       formatStatus,

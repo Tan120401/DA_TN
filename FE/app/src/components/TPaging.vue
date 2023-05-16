@@ -66,7 +66,7 @@ export default {
         //   i == props.totalPage ||
         //   (i < pageNumber.value + 2 && i > pageNumber.value - 2)
         // ) {
-          
+
         // } else if (i == pageNumber.value + 3 || i == pageNumber.value - 3) {
         //   pages.push("...");
         // }
@@ -87,4 +87,7 @@ export default {
 </script>
 
 <style>
+.pagination {
+  margin-top: -12px;
+}
 </style>

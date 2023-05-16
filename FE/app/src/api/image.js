@@ -9,6 +9,9 @@ const AXIOS_IMAGE = {
   async insertToImage(param) {
     return await axios.post(`${API}`, param);
   },
+  async deleteImageByProductId(param) {
+    return await axios.delete(`${API}/${param}`);
+  },
 };
 
 export default AXIOS_IMAGE;

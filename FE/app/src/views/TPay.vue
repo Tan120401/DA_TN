@@ -77,10 +77,10 @@
                   <div class="flex-item justify-center">
                     <img
                       class="user-pay-img m-r-8"
-                      src="https://www.coolmate.me/images/logo-zalopay.svg"
+                      src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png"
                       alt=""
                     />
-                    <span>Ví điện tử ZaloPay</span>
+                    <span>Ví điện tử Momo</span>
                   </div>
                   <input
                     type="radio"
@@ -156,6 +156,7 @@ import AXIOS_MOMO from "@/api/momo";
 import router from "@/router/router";
 import { useStore } from "vuex";
 import { notification } from "ant-design-vue";
+import AXIOS_SIZE from "@/api/size";
 export default {
   name: "TPay",
   components: {
@@ -173,6 +174,7 @@ export default {
     const orderOptions = reactive(_.cloneDeep(ORDER_OPTIONS));
     const orderDetailOptions = reactive(_.cloneDeep(ORDERDETAIL_OPTIONS));
     const listCartId = ref([]);
+    const lstSizeToPay = JSON.parse(route.query.lstSizeId);
     /**
      * Nhận giá trị thông qua router query
      */
@@ -297,12 +299,20 @@ export default {
         console.log(err);
       }
     };
+    const updateToSize = async (id, params) => {
+      try {
+        let response = await AXIOS_SIZE.updateToSize(id, params);
+        if (response) {
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
     /**
      * Insert bảng Bill
      */
     const insertToBill = async (params) => {
       try {
-        console.log(billOptions);
         let response = await AXIOS_BILL.insertBill(params);
         if (response) {
           cartProduct.value.forEach((item, index) => {
@@ -319,6 +329,23 @@ export default {
       }
     };
     /**
+     * Hàm update lại số lượng sản phẩm
+     */
+    const onUpdateQuantity = () => {
+      cartProduct.value.forEach((cartItem) => {
+        lstSizeToPay.forEach((sizeItem) => {
+          if (
+            cartItem.ProductId == sizeItem.ProductId &&
+            cartItem.SizeProduct == sizeItem.SizeNumber
+          ) {
+            updateToSize(sizeItem.SizeId, {
+              Quantity: sizeItem.Quantity - cartItem.NumProduct,
+            });
+          }
+        });
+      });
+    };
+    /**
      * Click thanh toán
      */
     const onBuyNow = () => {
@@ -327,16 +354,18 @@ export default {
        */
       var lstInput = validateForm.value.querySelectorAll("input");
       var inValid = validateData(lstInput);
-      if (inValid.isValidate) {
-        orderOptions.UserId = store.state.userInfo.UserId;
-        orderOptions.OrderId = uuidv4();
-        if (isPay.value) {
-          billOptions.IsPay = 1;
-        } else {
-          billOptions.IsPay = 0;
-        }
-        insertToOrder(orderOptions);
-      }
+      onUpdateQuantity();
+
+      // if (inValid.isValidate) {
+      //   orderOptions.UserId = store.state.userInfo.UserId;
+      //   orderOptions.OrderId = uuidv4();
+      //   if (isPay.value) {
+      //     billOptions.IsPay = 1;
+      //   } else {
+      //     billOptions.IsPay = 0;
+      //   }
+      //   insertToOrder(orderOptions);
+      // }
     };
 
     const formatter = new Intl.NumberFormat("vi-VN", {
@@ -347,6 +376,7 @@ export default {
     return {
       store,
       sumPrice,
+      lstSizeToPay,
       getAllCartSelected,
       paymentByMomo,
       validateForm,
@@ -365,6 +395,8 @@ export default {
       insertToBill,
       listCartId,
       deleteMulptyCart,
+      updateToSize,
+      onUpdateQuantity,
     };
   },
 };

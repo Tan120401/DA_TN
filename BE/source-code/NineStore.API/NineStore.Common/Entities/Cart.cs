@@ -33,6 +33,5 @@ namespace NineStore.Common.Entities
         /// Số lượng sản phẩm
         /// </summary>
         public int? NumProduct { get; set; }
-        
     }
 }

@@ -90,9 +90,9 @@
               <i class="fa-solid fa-cart-shopping"></i>Thêm vào giỏ hàng
             </div>
             <!-- </router-link> -->
-            <router-link :to="{ name: 'Pay' }"
-              ><div class="tbutton buy-now">Mua ngay</div></router-link
-            >
+            <div class="tbutton buy-now" @click="onBuyNow">
+              <i class="fa-solid fa-bag-shopping"></i> Mua ngay
+            </div>
           </div>
         </div>
       </div>
@@ -114,6 +114,20 @@
     </div>
     <TFooter></TFooter>
   </div>
+  <TPopup
+    v-if="isShowPopup"
+    popupTile="Thông báo"
+    popupContent="Vui lòng đăng nhập trước khi mua hàng"
+    @hidePopup="hidePopup"
+    ><template #footer>
+      <button type="button" class="btn btn-secondary" @click="hidePopup">
+        Đóng
+      </button>
+      <button type="button" class="btn btn-primary" @click="linkToLogin">
+        Đăng nhập
+      </button>
+    </template></TPopup
+  >
 </template>
 
 <script>
@@ -122,7 +136,7 @@ import { reactive, ref, watchEffect, watch, computed } from "vue";
 
 import THeader from "@/layout/THeader.vue";
 import TFooter from "@/layout/TFooter.vue";
-
+import TPopup from "@/components/TPopup.vue";
 import AXIOS_PRODUCT from "@/api/Product";
 import AXIOS_SIZE from "@/api/size";
 import AXIOS_IMAGE from "@/api/image";
@@ -137,6 +151,7 @@ export default {
   components: {
     THeader,
     TFooter,
+    TPopup,
   },
   setup() {
     const route = useRoute();
@@ -152,6 +167,20 @@ export default {
     const isSizeItem = ref();
     const sizeSelected = ref([]);
     const quantityBySize = ref();
+    const isShowPopup = ref(false);
+
+    /**
+     * Ẩn popup
+     */
+    const hidePopup = () => {
+      isShowPopup.value = false;
+    };
+    /**
+     * Đăng nhập
+     */
+    const linkToLogin = () => {
+      router.push({ name: "Login" });
+    };
     /**
      * Hàm lấy thông tin sản phẩm thông qua id
      * @param {Id product} param
@@ -187,7 +216,7 @@ export default {
     getAllSizeProduct(route.params.id);
 
     /**
-     * Hàm lấy size của sản phẩm
+     * Hàm lấy ảnh của sản phẩm
      */
     const getALLImageProduct = async (param) => {
       try {
@@ -272,20 +301,40 @@ export default {
      * Hàm thêm sản phẩm vào giỏ hàng
      */
     const addToCart = () => {
-      if (!sizeProduct.value) {
-        isSizeItem.value = true;
-      }
-      if (isSizeItem.value || isOverloadNumProduct.value) {
-        return;
+      if (store.state.isLogin) {
+        if (!sizeProduct.value) {
+          isSizeItem.value = true;
+        }
+        if (isSizeItem.value || isOverloadNumProduct.value) {
+          return;
+        } else {
+          cartOptions.UserId = store.state.userInfo.UserId;
+          cartOptions.ProductId = route.params.id;
+          cartOptions.SizeProduct = sizeProduct.value;
+          cartOptions.NumProduct = numProduct.value;
+          insertToCart(cartOptions);
+        }
       } else {
-        cartOptions.UserId = store.state.userInfo.UserId;
-        cartOptions.ProductId = route.params.id;
-        cartOptions.SizeProduct = sizeProduct.value;
-        cartOptions.NumProduct = numProduct.value;
-        insertToCart(cartOptions);
+        isShowPopup.value = true;
       }
     };
 
+    /**
+     * Ấn mua ngay
+     */
+    const onBuyNow = () => {
+      if (store.state.isLogin) {
+        if (!sizeProduct.value) {
+          isSizeItem.value = true;
+        }
+        if (isSizeItem.value || isOverloadNumProduct.value) {
+          return;
+        } else {
+        }
+      } else {
+        isShowPopup.value = true;
+      }
+    };
     /**
      * Định dạng tiền tệ VND
      */
@@ -294,11 +343,11 @@ export default {
       currency: "VND",
     });
     return {
+      isShowPopup,
       sizeSelected,
       quantityBySize,
       isOverloadNumProduct,
       store,
-      addToCart,
       isLoading,
       productDetail,
       route,
@@ -307,16 +356,20 @@ export default {
       isSizeItem,
       imageOptions,
       pictureHighlight,
-      selectedImage,
+      cartOptions,
+      formatter,
       numProduct,
+      hidePopup,
+      linkToLogin,
+      selectedImage,
+      addToCart,
+      onBuyNow,
       selectedSize,
       addProduct,
       getProductById,
       removeProduct,
       getAllSizeProduct,
       getALLImageProduct,
-      cartOptions,
-      formatter,
       insertToCart,
     };
   },

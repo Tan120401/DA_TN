@@ -73,7 +73,7 @@
         </tbody>
       </table>
     </div>
-    <div v-if="isLoading">
+    <div v-if="!isLoading">
       <t-paging
         :totalPage="totalPage"
         @onChangPageNumber="onChangPageNumber"
@@ -183,7 +183,14 @@
             </div>
           </div>
           <hr />
-          <div>
+          <div
+            style="
+              width: 100%;
+              height: 300px;
+              overflow-x: hidden;
+              overflow-y: auto;
+            "
+          >
             <div
               class="row d-flex align-items-center"
               v-for="(item, index) in sizeOption"
@@ -213,14 +220,10 @@
                 @click="onRemoveSize(index)"
               ></button>
             </div>
-            <button
-              type="button"
-              class="btn btn-sm btn-secondary"
-              @click="onAddSize"
-            >
-              <i class="bi bi-plus-lg me-1"></i> Thêm kích thước
-            </button>
           </div>
+          <button type="button" class="btn btn-sm btn-secondary" @click="onAddSize">
+            <i class="bi bi-plus-lg me-1"></i> Thêm kích thước
+          </button>
         </div>
       </div>
     </template>
@@ -233,17 +236,22 @@
       </button>
     </template>
   </TPopup>
+  <TLoading v-if="isLoading"></TLoading>
+  <div v-if="isShowNoData" class="text-nodata">
+    Không có sản phẩm nào thỏa mãn.
+  </div>
 </template>
   <script>
 import { watch, reactive, ref } from "vue";
-import { useStore } from "vuex";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 
 import TInput from "@/components/TInput.vue";
 import TPaging from "@/components/TPaging.vue";
 import TPopup from "@/components/TPopup.vue";
+import TLoading from "@/components/TLoading.vue";
 
+import router from "@/router/router";
 import AXIOS_PRODUCT from "@/api/Product";
 import AXIOS_CATEGORY from "@/api/category";
 import { FILTER_OPTION } from "@/js/constrant";
@@ -257,9 +265,11 @@ export default {
     TPopup,
     TInput,
     TPaging,
+    TLoading,
   },
   setup() {
     const isLoading = ref(false);
+    const isShowNoData = ref(false);
     const filterOption = reactive(_.cloneDeep(FILTER_OPTION));
     const productData = ref([]);
     const totalPage = ref();
@@ -280,6 +290,9 @@ export default {
       },
     ]);
 
+    const onClickEdit = (value) => {
+      router.push({ path: `ProductUpdate/${value}` });
+    };
     /**
      * Thay đổi từ khóa tìm kiếm gọi lại phân trang
      */
@@ -427,6 +440,7 @@ export default {
      * Hiện form thêm
      */
     const onShowAddProduct = () => {
+      lstUrl.value = [];
       sizeOption.value = [
         {
           SizeId: null,
@@ -455,10 +469,19 @@ export default {
     const getProductByFilter = async (params) => {
       try {
         let response = await AXIOS_PRODUCT.getProductByFilter(params);
+        isLoading.value = true;
+
         if (response) {
           productData.value = response.data.Data;
           totalPage.value = response.data.TotalPage;
-          isLoading.value = true;
+          setTimeout(() => {
+            isLoading.value = false;
+          }, 500);
+          if (totalPage.value < 1) {
+            isShowNoData.value = true;
+          } else {
+            isShowNoData.value = false;
+          }
         }
       } catch (error) {
         console.log(error);
@@ -484,31 +507,33 @@ export default {
     };
     return {
       keywordSearch,
-      uploadFile,
-      insertToImage,
       lstImagePath,
       lstImageProduct,
-      insertToSize,
-      onRemoveSize,
-      onAddSize,
       sizeOption,
-      addProduct,
       lstUrl,
-      onChoseFile,
       validateFormAdd,
       lstCategory,
-      getAllCategory,
       isLoading,
-      onChangPageNumber,
+      isShowNoData,
       totalPage,
       filterOption,
       productData,
+      isShowPopupAdd,
+      productOption,
+      onClickEdit,
+      insertToSize,
+      onRemoveSize,
+      onAddSize,
+      uploadFile,
+      insertToImage,
+      addProduct,
+      onChoseFile,
+      getAllCategory,
+      onChangPageNumber,
       formatStatus,
       getProductByFilter,
-      isShowPopupAdd,
       onShowAddProduct,
       hidePopup,
-      productOption,
       onAddProduct,
     };
   },

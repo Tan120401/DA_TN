@@ -175,12 +175,13 @@ export default {
     const sizeOptions = ref([]);
     const isOverLoadNumProduct = ref(false);
     const lstCartIdQuery = ref([]);
+    const sizeToPay = ref([]);
     /**
      * Thay đổi số lượng sản phẩm
      */
     const onChangeValue = (value) => {
-      getProductById(value.ProductId);
       getAllSizeProduct(value.ProductId);
+      getProductById(value.ProductId);
       sizeOptions.value.forEach((item, index) => {
         if (item.SizeNumber == value.SizeProduct) {
           value.Quantity = item.Quantity;
@@ -191,8 +192,17 @@ export default {
       } else {
         isOverLoadNumProduct.value = false;
       }
+      updateToCart(value.CartId, {
+        NumProduct: value.NumProduct,
+      })
     };
-
+    const updateToCart = async (id, params) => {
+      try {
+        let response = await AXIOS_CART.updateToCart(id, params);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     const getAllSizeProduct = async (param) => {
       try {
         let response = await AXIOS_SIZE.getSizeByProductId(param);
@@ -253,7 +263,17 @@ export default {
       }
       return sum;
     });
-
+    watch(selected, (newVal) => {
+      sizeToPay.value = [];
+      newVal.forEach(async (item) => {
+        await getAllSizeProduct(item.ProductId);
+        sizeOptions.value.forEach((size) => {
+          if (size.SizeNumber == item.SizeProduct) {
+            sizeToPay.value.push(size);
+          }
+        });
+      });
+    });
     /**
      * Hàm tính check all
      */
@@ -375,6 +395,7 @@ export default {
           path: "/Pay",
           query: {
             lstCarId: JSON.stringify(lstCartIdQuery.value),
+            lstSizeId: JSON.stringify(sizeToPay.value),
           },
         });
       }
@@ -387,6 +408,8 @@ export default {
       currency: "VND",
     });
     return {
+      sizeToPay,
+      updateToCart,
       lstCartIdQuery,
       isOverLoadNumProduct,
       sizeOptions,

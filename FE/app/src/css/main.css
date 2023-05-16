@@ -12,7 +12,7 @@
 @import url(./login.css);
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box !important;
   margin: 0;
   outline: none;
   --primary-color: #8bbdcf;
@@ -21,8 +21,15 @@
   text-decoration: none !important;
   letter-spacing: 0.5px;
 }
+body{
+  width: unset !important;
+  height: unset !important;
+}
 a {
   color: #2c3e50 !important;
+}
+.c-g-8{
+  column-gap: 8px;
 }
 .m-r-8 {
   margin-right: 8px;
@@ -81,7 +88,7 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 15px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {

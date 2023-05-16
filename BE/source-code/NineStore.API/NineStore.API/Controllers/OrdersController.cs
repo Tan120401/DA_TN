@@ -24,7 +24,12 @@ namespace NineStore.API.Controllers
         #endregion
 
         #region Method
-
+        
+        /// <summary>
+        /// Hàm lấy thông tin order detail thông qua orderid
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         [HttpGet("get-orderdetail-service/{orderId}")]
         public IActionResult GetOrderDetailServices(Guid? orderId)
         {
@@ -39,6 +44,10 @@ namespace NineStore.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Lấy thông tin tất cả các order detail
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("get-all-orderservice")]
         public IActionResult GetAllOrderServices()
         {
@@ -53,7 +62,14 @@ namespace NineStore.API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Tìm kiếm và phân trang
+        /// </summary>
+        /// <param name="keyWord"></param>
+        /// <param name="userId"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="pageNumber"></param>
+        /// <returns></returns>
         [HttpPost("filter-by-userId")]
         public IActionResult GetRecordByFilterAndUserId(
            [FromQuery] string? keyWord,

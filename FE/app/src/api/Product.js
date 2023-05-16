@@ -17,6 +17,9 @@ const AXIOS_PRODUCT = {
   async insertToProduct(param) {
     return await axios.post(`${API}`, param);
   },
+  async updateToProduct(id, param) {
+    return await axios.put(`${API}/${id}`, param);
+  },
   async uploadFile(params) {
     return await axios.post(`${API}/upload-file`, params, {
       headers: {

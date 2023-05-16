@@ -122,7 +122,6 @@ namespace NineStore.API.Controllers
             return path;
         }
 
-
         /// <summary>
         /// Hàm gửi email
         /// </summary>
@@ -144,13 +143,18 @@ namespace NineStore.API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Khai báo hàm random
+        /// </summary>
         private static readonly Random Random = new Random();
-
         private const string LowercaseChars = "abcdefghijklmnopqrstuvwxyz";
         private const string UppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string NumericChars = "0123456789";
         private const string SpecialChars = "#$%^&*()_+";
+        /// <summary>
+        /// Hàm sinh mật khẩu mới
+        /// </summary>
+        /// <returns></returns>
         private string GenerateNewPassword()
         {
             var password = new char[8];
@@ -180,6 +184,12 @@ namespace NineStore.API.Controllers
 
             return new string(password);
         }
+
+        /// <summary>
+        /// Hàm quên mật khẩu
+        /// </summary>
+        /// <param name="userName">Tên đăng nhập</param>
+        /// <returns></returns>
         [HttpPost("fogot-password")]
         public virtual IActionResult ForgotPassword(string userName)
         {
@@ -215,7 +225,6 @@ namespace NineStore.API.Controllers
             }
 
         }
-
 
         /// <summary>
         /// Xử lý ngoại lệ trả về lỗi

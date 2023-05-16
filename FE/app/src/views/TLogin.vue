@@ -92,19 +92,28 @@ export default {
     const isShowLoginFail = ref(false);
     const $store = useStore();
     const validateForm = ref(null);
-
     const isShowPopupForgotPassword = ref(false);
     const validateForgotPass = ref(null);
     const emailOfUser = ref();
     const isShowForgotFail = ref();
 
+    /**
+     * Hiển thị form quên mật khẩu
+     */
     const onShowPoupForgotPass = () => {
       isShowPopupForgotPassword.value = true;
       emailOfUser;
     };
+    /**
+     * Ẩn form quên mật khẩu
+     */
     const hidePopupForgotPassword = () => {
       isShowPopupForgotPassword.value = false;
     };
+
+    /**
+     * Nhấn quên mật khẩu
+     */
     const onSubmitForgotPass = async () => {
       var lstInput = validateForgotPass.value.querySelectorAll("input");
       var inValid = validateData(lstInput);

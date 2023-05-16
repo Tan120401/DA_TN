@@ -12,11 +12,11 @@ import TCategory from "@/views/TCategory";
 import TOrder from "@/views/TOrder";
 import TContact from "@/views/TContact";
 
-
 import THomeAdmin from "@/views/admin/THomeAdmin";
 import TCustomerAdmin from "@/views/admin/TCustomerAdmin";
 import TOrderAdmin from "@/views/admin/TOrderAdmin";
 import TProductAdmin from "@/views/admin/TProductAdmin";
+import TProductUpdate from "@/views/admin/TProductUpdate"
 import TReportAdmin from "@/views/admin/TProductAdmin";
 import TAdmin from "@/views/admin/TAdmin";
 // import TProductAdmin from "@/views/admin/TProductAdmin"
@@ -108,6 +108,11 @@ const routes = [
         path: "Product",
         name: "ProductAdmin",
         component: TProductAdmin,
+      },
+      {
+        path: "ProductUpdate/:id",
+        name: "ProductUpdate",
+        component: TProductUpdate,
       },
       {
         path: "Report",

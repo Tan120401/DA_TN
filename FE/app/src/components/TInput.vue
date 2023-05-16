@@ -28,7 +28,7 @@ export default {
     watch(
       () => props.modelValue,
       (val) => {
-        if (val.trim() == "") {
+        if (val.toString().trim() == "") {
           isValidate.value = true;
           messageValidate.value = props.name + " không được để trống";
         } else {
@@ -37,7 +37,7 @@ export default {
         for (var i = 0; i < props.rules.length; i++) {
           if (props.rules[i] == "Email") {
             const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (!val || val.trim() == "") {
+            if (!val || val.toString().trim() == "") {
               isValidate.value = true;
               messageValidate.value = props.name + " không được để trống.";
             } else if (val && !val.match(regexEmail)) {
@@ -50,7 +50,7 @@ export default {
             const regexPassword = new RegExp(
               "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
             );
-            if (!val || val.trim() == "") {
+            if (!val || val.toString().trim() == "") {
               isValidate.value = true;
               messageValidate.value = props.name + " không được để trống.";
             } else if (val && !regexPassword.test(val)) {

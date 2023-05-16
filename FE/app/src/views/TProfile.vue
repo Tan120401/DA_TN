@@ -180,7 +180,6 @@ export default {
       }
     };
     getUserInfor(route.params.id);
-
     /**
      * Hàm hiển thị form sửa
      * Created by NVTAN(10/04/2023)
@@ -219,11 +218,10 @@ export default {
           if (response) {
             if (fileChange.FileName != null && fileChange.File != null) {
               await uploadFile(fileChange);
+              getUserByIdAfterUpdate(route.params.id);
+              getUserInfor(route.params.id);
+              onHideFormEdit();
             }
-            console.log(route.params.id);
-            getUserByIdAfterUpdate(route.params.id);
-            getUserInfor(route.params.id);
-            onHideFormEdit();
           }
         } catch (err) {
           console.log(err);
@@ -252,7 +250,8 @@ export default {
     const uploadFile = async (params) => {
       try {
         let response = await USER_AXIOS.uploadFile(params);
-        console.log(response);
+        if (response) {
+        }
       } catch (err) {
         console.log(err);
       }

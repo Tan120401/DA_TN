@@ -58,6 +58,8 @@ namespace NineStore.DL.SizeDL
             }
             return numberOfAffectedRows;
         }
+
+
         protected virtual void GeneratePrimaryKey(DynamicParameters parameters, PropertyInfo[] properties, Guid? id)
         {
             foreach (var property in properties)

@@ -3,13 +3,13 @@
     <THeader></THeader>
     <div id="cart">
       <h2>Đơn hàng</h2>
-      <!-- <div class="cart__note">
+      <div class="cart__note mb-3">
         <i class="fa-solid fa-circle-exclamation m-r-8"></i>
         <span
           >Nine store thông báo: quý khách vui lòng kiểm tra thông tin đầy đủ
           trước khi đặt hàng</span
         >
-      </div> -->
+      </div>
       <div
         class="d-flex justify-content-between p-2"
         style="width: 400px; background-color: #fff; border-radius: 8px"
@@ -17,7 +17,7 @@
         <router-link
           :class="{ 'order-active': $route.path == `/Order/0` }"
           to="/Order/0"
-          >Đang xử lý</router-link
+          >Chờ xác nhận</router-link
         >
         <router-link
           :class="{ 'order-active': $route.path == `/Order/1` }"
@@ -80,7 +80,9 @@
             </td>
             <td>
               <button
-                :class="[item.Status == 0 ? '' : 'disabled']"
+                :class="[
+                  item.Status == 0? '' : 'disabled',
+                ]"
                 type="button"
                 class="btn btn-outline-danger btn-sm"
                 @click="onShowPopupReason(item)"
@@ -89,6 +91,13 @@
                 Hủy đặt hàng
               </button>
             </td>
+          </tr>
+          <tr v-if="isShowNoData">
+            <td></td>
+            <td></td>
+            <td class="order-nodata">Bạn chưa có đơn hàng.</td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
@@ -210,6 +219,7 @@ import { useStore } from "vuex";
 import moment from "moment";
 import _ from "lodash";
 import router from "@/router/router";
+import { notification } from "ant-design-vue";
 
 import THeader from "@/layout/THeader.vue";
 import TFooter from "@/layout/TFooter.vue";
@@ -219,6 +229,8 @@ import TPopup from "@/components/TPopup.vue";
 import AXIOS_ORDER from "@/api/order";
 import { FILTER_USERID } from "@/js/constrant";
 import { validateData } from "@/js/validateion";
+
+import { Enum } from "@/js/base/enum";
 export default {
   name: "TCart",
   components: {
@@ -239,6 +251,7 @@ export default {
     const filterByUserId = reactive(_.cloneDeep(FILTER_USERID));
     const reasonContent = ref();
     const validateForm = ref(null);
+    const isShowNoData = ref(false);
     /**
      * Xác nhận hủy đơn
      */
@@ -261,7 +274,9 @@ export default {
         }
       }
     };
-
+    /**
+     * Ẩn lý do hủy
+     */
     const hidePopupReason = () => {
       isShowPopupReason.value = false;
     };
@@ -285,18 +300,23 @@ export default {
       }
       value.NumProduct += 1;
     };
+    /**
+     * Lấy đơn hàng thông qua id người dùng
+     * @param {Id người dùng} param
+     */
     const getOrderServiceByUserId = async (param) => {
       try {
         let response = await AXIOS_ORDER.getOrderServiceByOrderId(param);
         if (response) {
           dataSources.value = response.data;
-          console.log(response.data);
         }
       } catch (err) {
         console.log(err);
       }
     };
-
+    /**
+     * Tính tổng tiền
+     */
     const sumPrice = computed(() => {
       var sum = 0;
       for (let key in dataSources.value) {
@@ -315,6 +335,11 @@ export default {
         let response = await AXIOS_ORDER.getAllOrderServicebyUserId(param);
         if (response) {
           dataOrders.value = response.data.Data;
+          if (response.data.ErrorCode == Enum.NODATA) {
+            isShowNoData.value = true;
+          } else {
+            isShowNoData.value = false;
+          }
         }
       } catch (err) {
         console.log(err);
@@ -323,7 +348,9 @@ export default {
     filterByUserId.userId = store.state.userInfo.UserId;
     filterByUserId.keyWord = route.params.id;
     getAllOrderServicebyUserId(filterByUserId);
-
+    /**
+     * Theo dõi id order thay đổi gọi lại lấy dữ liệu
+     */
     watch(
       () => route.params.id,
       (newValue) => {
@@ -336,6 +363,10 @@ export default {
       }
     );
 
+    /**
+     * Lấy hóa đơn thông qua id đơn hàng
+     * @param {Id đơn hàng} param
+     */
     const getBillByOrderId = async (param) => {
       try {
         let response = await AXIOS_BILL.getBillById(param);
@@ -389,19 +420,25 @@ export default {
       orderSelected.value.Status = 2;
       updateOrderById(orderSelected.value.OrderId, orderSelected.value);
     };
-
+    /**
+     * Hiện popup chi tiết đơn hàng
+     * @param {*} value
+     */
     const onShowPopupOrderDetail = (value) => {
-      console.log(value);
       isShowPopupOrderDetail.value = true;
       getOrderServiceByUserId(value.OrderId);
       getBillByOrderId(value.OrderId);
     };
+    /**
+     * Định dạng trạng thái đơn hàng
+     * @param {*} value
+     */
     const formatStatus = (value) => {
-      if (value == 0) {
-        return "Đang xử lý";
-      } else if (value == 1) {
+      if (value == Enum.STATUS_ORDER.PENDDING) {
+        return "Chờ xác nhận";
+      } else if (value == Enum.STATUS_ORDER.SHIPPING) {
         return "Đang giao hàng";
-      } else if (value == 2) {
+      } else if (value == Enum.STATUS_ORDER.SUCCESS) {
         return "Giao hàng thành công";
       } else {
         return "Đã hủy";
@@ -414,10 +451,15 @@ export default {
       style: "currency",
       currency: "VND",
     });
+    /**
+     * Định dạng ngày tháng
+     * @param {*} date
+     */
     const formatDate = (date) => {
       return moment(date).format("DD/MM/YYYY HH:mm");
     };
     return {
+      isShowNoData,
       validateForm,
       reasonContent,
       onConfirmReasonCancel,
@@ -480,5 +522,10 @@ export default {
 }
 .order-active {
   color: var(--primary-color) !important;
+}
+.order-nodata {
+  font-size: 18px;
+  font-style: italic;
+  opacity: 0.6;
 }
 </style>

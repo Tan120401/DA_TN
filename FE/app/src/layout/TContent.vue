@@ -53,7 +53,7 @@
 import TProductitem from "@/components/TProductItem.vue";
 import TBanner from "@/components/TBanner.vue";
 import TNewitem from "@/components/TNewsItem.vue";
-import { PRODUCTS, NEWS } from "@/js/data";
+import {  NEWS } from "@/js/data";
 import AXIOS_PRODUCT from "@/api/Product";
 import { FILTER_CATEGORY } from "@/js/constrant";
 
@@ -70,7 +70,7 @@ export default {
 
   setup() {
     const route = useRoute();
-    const productList = reactive(PRODUCTS);
+    const productList = reactive([]);
     const newsList = reactive(NEWS);
     const productLatests = ref([]);
     const productSales = ref([]);

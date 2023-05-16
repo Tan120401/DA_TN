@@ -8,7 +8,6 @@ const store = createStore({
     return {
       isLogin: false,
       userInfo: [],
-      cart: [],
       billInfo: [],
     };
   },
@@ -17,6 +16,9 @@ const store = createStore({
     increment(state) {
       state.count++;
     },
+    /**
+     * Hàm đăng nhập
+     */
     setLogin(state, payLoad) {
       if (payLoad != false) {
         if (payLoad.data.Token) {
@@ -30,11 +32,17 @@ const store = createStore({
         state.isLogin = false;
       }
     },
+    /**
+     * Hàm đăng xuất
+     */
     Logout(state) {
       state.isLogin = false;
       localStorage.removeItem("isLogin");
       localStorage.removeItem("userInfo");
     },
+    /**
+     * Hàm lấy thông tin thông qua id
+     */
     getUserById(state, payLoad) {
       if (payLoad) {
         console.log(payLoad.data[0]);
@@ -42,15 +50,9 @@ const store = createStore({
         localStorage.setItem("userInfo", JSON.stringify(payLoad.data[0]));
       }
     },
-    addToCart(state, payLoad) {
-      if (payLoad != false) {
-        state.cart.push(payLoad);
-        localStorage.setItem("cart", JSON.stringify(state.cart));
-        console.log(state.cart);
-      } else {
-        state.cart = null;
-      }
-    },
+    /**
+     * Thêm thông tin hóa đơn vào local
+     */
     addToBill(state, payLoad) {
       if (payLoad != false) {
         state.billInfo = payLoad;
@@ -70,32 +72,39 @@ const store = createStore({
     },
   },
   actions: {
+    /**
+     * Hàm đăng nhập
+     */
     async fetchLogin({ commit }, params) {
       try {
         let response = await USER_AXIOS.setLogin(params);
         if (response.data != null) {
           commit("setLogin", response);
-          router.push({ path: "/" });
+          console.log();
+          if (response.data.Role == "user") {
+            router.push({ path: "/" });
+          } else {
+            router.push({ path: "/Admin/Home" });
+          }
         }
       } catch (err) {
         commit("setLogin", false);
         console.log(err);
       }
     },
+    /**
+     * Hàm lấy thông tin người dùng thông qua id
+     */
     async getUserById({ commit }, param) {
       try {
         let response = await USER_AXIOS.getUserById(param);
         if (response.data != null) {
           commit("getUserById", response);
-          router.push({ path: "/" });
         }
       } catch (err) {
         commit("getUserById", false);
         console.log(err);
       }
-    },
-    addToCart({ commit }, param) {
-      commit("addToCart", param);
     },
     addToBill({ commit }, param) {
       commit("addToBill", param);

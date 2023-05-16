@@ -20,6 +20,14 @@ namespace NineStore.API.Controllers
         }
 
         #region Method
+        
+        /// <summary>
+        /// Lấy tất cả sản phẩm 
+        /// </summary>
+        /// <param name="categoryId">Id danh mục</param>
+        /// <param name="order">Sắp xếp theo</param>
+        /// <param name="keyword">Từ khóa tìm kiếm</param>
+        /// <returns></returns>
         [HttpGet("get-product")]
         public IActionResult GetAllProductByCategory([FromQuery] Guid? categoryId, [FromQuery] string? order, [FromQuery] string? keyword)
         {
@@ -35,6 +43,11 @@ namespace NineStore.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Hàm upload ảnh sản phẩm
+        /// </summary>
+        /// <param name="fileModel"></param>
+        /// <returns></returns>
         [HttpPost("upload-file")]
         public IActionResult CreateFile([FromForm] FileModel fileModel)
         {
