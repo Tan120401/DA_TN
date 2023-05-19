@@ -17,7 +17,7 @@
               <input type="checkbox" v-model="selectAll" />
             </th>
             <th style="width: 380px; text-align: left">Sản phẩm</th>
-            <th style="width: 120px">Size</th>
+            <th style="width: 160px">Size</th>
             <th style="width: 120px">Số lượng</th>
             <th style="width: 320px">Đơn giá</th>
             <th style="width: 320px">Thành tiền</th>
@@ -75,9 +75,6 @@
               </span>
             </td>
             <td>
-              <!-- <span class="product__price-discount m-r-8">{{
-                formatter.format(item.Price * item.NumProduct)
-              }}</span> -->
               <span>{{
                 formatter.format(
                   item.Price * (1 - item.Discount / 100) * item.NumProduct
@@ -94,6 +91,16 @@
                 Xóa
               </button>
             </td>
+          </tr>
+          <tr v-if="isShowNoData">
+            <td></td>
+            <td></td>
+            <td colspan="3" class="order-nodata">
+              Bạn chưa có sản phẩm trong giỏ hàng.
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
@@ -176,6 +183,7 @@ export default {
     const isOverLoadNumProduct = ref(false);
     const lstCartIdQuery = ref([]);
     const sizeToPay = ref([]);
+    const isShowNoData = ref(false);
     /**
      * Thay đổi số lượng sản phẩm
      */
@@ -194,7 +202,7 @@ export default {
       }
       updateToCart(value.CartId, {
         NumProduct: value.NumProduct,
-      })
+      });
     };
     const updateToCart = async (id, params) => {
       try {
@@ -301,6 +309,11 @@ export default {
           dataSources.value.forEach((item) => {
             item.Quantity = 999;
           });
+          if (response.data.length < 1) {
+            isShowNoData.value = true;
+          } else {
+            isShowNoData.value = false;
+          }
         }
       } catch (err) {
         console.log(err);
@@ -390,14 +403,13 @@ export default {
         selected.value.forEach((item) => {
           lstCartIdQuery.value.push(item.CartId);
         });
-        console.log(lstCartIdQuery.value);
         router.push({
           path: "/Pay",
           query: {
             lstCarId: JSON.stringify(lstCartIdQuery.value),
-            lstSizeId: JSON.stringify(sizeToPay.value),
           },
         });
+        store.dispatch("addListSizeToPay", sizeToPay.value);
       }
     };
     /**
@@ -409,6 +421,7 @@ export default {
     });
     return {
       sizeToPay,
+      isShowNoData,
       updateToCart,
       lstCartIdQuery,
       isOverLoadNumProduct,

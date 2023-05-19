@@ -168,7 +168,7 @@ export default {
     const sizeSelected = ref([]);
     const quantityBySize = ref();
     const isShowPopup = ref(false);
-
+    const sizeToPay = ref([]);
     /**
      * Ẩn popup
      */
@@ -243,6 +243,7 @@ export default {
         sizeProduct.value = value.SizeNumber;
         quantityBySize.value = value.Quantity;
         sizeSelected.value = value;
+        sizeToPay.value = value;
       }
     };
 
@@ -330,6 +331,18 @@ export default {
         if (isSizeItem.value || isOverloadNumProduct.value) {
           return;
         } else {
+          store.dispatch("addProductBuyNow", {
+            ProductId: productDetail.value.ProductId,
+            Discount: productDetail.value.Discount,
+            ImgProduct: productDetail.value.ImgProduct,
+            NumProduct: numProduct.value,
+            Price: productDetail.value.Price,
+            ProductName: productDetail.value.ProductName,
+            SizeProduct: 40,
+            UserId: store.state.userInfo.UserId,
+          });
+          store.dispatch("addListSizeToPay", sizeToPay.value);
+          router.push({ path: "/PayNow" });
         }
       } else {
         isShowPopup.value = true;
@@ -343,6 +356,7 @@ export default {
       currency: "VND",
     });
     return {
+      sizeToPay,
       isShowPopup,
       sizeSelected,
       quantityBySize,

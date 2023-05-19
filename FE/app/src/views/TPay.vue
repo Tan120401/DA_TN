@@ -32,10 +32,6 @@
                 ></TInput>
               </div>
             </div>
-            <!-- <div class="user-email">
-              <span class="placeholder-input">Địa chỉ Email</span>
-              <TInput></TInput>
-            </div> -->
           </div>
           <h3>Chi tiết vận chuyển</h3>
           <div class="pay__content-user">
@@ -152,7 +148,7 @@ import AXIOS_ORDER_DETAIL from "@/api/orderdetail";
 import AXIOS_BILL from "@/api/bill";
 import AXIOS_CART from "@/api/cart";
 import AXIOS_MOMO from "@/api/momo";
-
+import { Enum } from "@/js/base/enum";
 import router from "@/router/router";
 import { useStore } from "vuex";
 import { notification } from "ant-design-vue";
@@ -174,11 +170,12 @@ export default {
     const orderOptions = reactive(_.cloneDeep(ORDER_OPTIONS));
     const orderDetailOptions = reactive(_.cloneDeep(ORDERDETAIL_OPTIONS));
     const listCartId = ref([]);
-    const lstSizeToPay = JSON.parse(route.query.lstSizeId);
     /**
      * Nhận giá trị thông qua router query
      */
     listCartId.value = JSON.parse(route.query.lstCarId);
+    const lstSizeToPay = JSON.parse(localStorage.getItem("lstSizeToPay"));
+    console.log(cartProduct.value);
     const getAllCartSelected = async (param) => {
       try {
         let response = await AXIOS_CART.getCartById(param);
@@ -234,7 +231,7 @@ export default {
     onMounted(() => {
       const urlParams = new URLSearchParams(window.location.href.split("?")[1]);
       const errorCode = urlParams.get("errorCode");
-      if (errorCode && errorCode == 0) {
+      if (errorCode && errorCode == Enum.PAY_CODE.SUCCESS) {
         Object.assign(
           billOptions,
           JSON.parse(localStorage.getItem("billInfo"))
@@ -245,7 +242,7 @@ export default {
           await onBuyNow();
           console.log("test pay");
         }, 1000);
-      } else if (errorCode && errorCode == 42) {
+      } else if (errorCode && errorCode != Enum.PAY_CODE.SUCCESS) {
         Object.assign(
           billOptions,
           JSON.parse(localStorage.getItem("billInfo"))
@@ -354,18 +351,17 @@ export default {
        */
       var lstInput = validateForm.value.querySelectorAll("input");
       var inValid = validateData(lstInput);
-      onUpdateQuantity();
-
-      // if (inValid.isValidate) {
-      //   orderOptions.UserId = store.state.userInfo.UserId;
-      //   orderOptions.OrderId = uuidv4();
-      //   if (isPay.value) {
-      //     billOptions.IsPay = 1;
-      //   } else {
-      //     billOptions.IsPay = 0;
-      //   }
-      //   insertToOrder(orderOptions);
-      // }
+      if (inValid.isValidate) {
+        orderOptions.UserId = store.state.userInfo.UserId;
+        orderOptions.OrderId = uuidv4();
+        if (isPay.value) {
+          billOptions.IsPay = 1;
+        } else {
+          billOptions.IsPay = 0;
+        }
+        insertToOrder(orderOptions);
+        onUpdateQuantity();
+      }
     };
 
     const formatter = new Intl.NumberFormat("vi-VN", {

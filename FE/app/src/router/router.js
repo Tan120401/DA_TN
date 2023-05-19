@@ -5,6 +5,7 @@ import TAbout from "@/views/TAbout";
 import TProductdetail from "@/views/TProductDetail";
 import TCart from "@/views/TCart";
 import TPay from "@/views/TPay";
+import TPayNow from "@/views/TPayNow";
 import TLogin from "@/views/TLogin";
 import TRegister from "@/views/TRegister";
 import TProfile from "@/views/TProfile";
@@ -16,7 +17,7 @@ import THomeAdmin from "@/views/admin/THomeAdmin";
 import TCustomerAdmin from "@/views/admin/TCustomerAdmin";
 import TOrderAdmin from "@/views/admin/TOrderAdmin";
 import TProductAdmin from "@/views/admin/TProductAdmin";
-import TProductUpdate from "@/views/admin/TProductUpdate"
+import TProductUpdate from "@/views/admin/TProductUpdate";
 import TReportAdmin from "@/views/admin/TProductAdmin";
 import TAdmin from "@/views/admin/TAdmin";
 // import TProductAdmin from "@/views/admin/TProductAdmin"
@@ -72,7 +73,11 @@ const routes = [
     name: "Pay",
     component: TPay,
   },
-
+  {
+    path: "/PayNow",
+    name: "PayNow",
+    component: TPayNow,
+  },
   {
     path: "/Order/:id",
     name: "Order",

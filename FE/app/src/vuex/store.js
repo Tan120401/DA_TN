@@ -9,6 +9,8 @@ const store = createStore({
       isLogin: false,
       userInfo: [],
       billInfo: [],
+      lstSizeToPay: [],
+      productBuyNow: [],
     };
   },
   getters: {},
@@ -61,6 +63,29 @@ const store = createStore({
         state.billInfo = null;
       }
     },
+    addListSizeToPay(state, payLoad) {
+      if (payLoad != false) {
+        console.log(payLoad);
+        state.lstSizeToPay = payLoad;
+        localStorage.setItem(
+          "lstSizeToPay",
+          JSON.stringify(state.lstSizeToPay)
+        );
+      } else {
+        state.lstSizeToPay = null;
+      }
+    },
+    addProductBuyNow(state, payLoad) {
+      if (payLoad != false) {
+        state.productBuyNow = payLoad;
+        localStorage.setItem(
+          "productBuyNow",
+          JSON.stringify(state.productBuyNow)
+        );
+      } else {
+        state.productBuyNow = null;
+      }
+    },
     initializeStore(state) {
       if (localStorage.getItem("isLogin")) {
         state.isLogin =
@@ -111,6 +136,12 @@ const store = createStore({
     },
     setLogout({ commit }) {
       commit("Logout");
+    },
+    addListSizeToPay({ commit }, param) {
+      commit("addListSizeToPay", param);
+    },
+    addProductBuyNow({ commit }, param) {
+      commit("addProductBuyNow", param);
     },
     initializeStore({ commit }) {
       commit("initializeStore");

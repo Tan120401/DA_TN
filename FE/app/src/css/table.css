@@ -12,6 +12,9 @@
 .cart__table th {
   height: 48px;
   background-color: #f3f0f7;
+  position: sticky;
+  top: 0;
+  text-align: left;
 }
 .cart__table td {
   height: 128px;

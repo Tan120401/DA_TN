@@ -11,7 +11,7 @@
         >
       </div>
       <div
-        class="d-flex justify-content-between p-2"
+        class="d-flex justify-content-between p-2 mb-3"
         style="width: 400px; background-color: #fff; border-radius: 8px"
       >
         <router-link
@@ -40,67 +40,65 @@
           >Tất cả</router-link
         >
       </div>
-      <table class="cart__table">
-        <tbody>
-          <tr>
-            <th style="width: 180px" class="flex-item just-center">
-              STT đơn hàng
-            </th>
-            <th style="width: 240px; text-align: center">Ngày đặt</th>
-            <th style="width: 380px; text-align: center">Tình trạng</th>
-            <th style="width: 380px; text-align: center">Xem chi tiết</th>
-            <th style="width: 280px"></th>
-          </tr>
-          <tr v-for="(item, index) in dataOrders" :key="index">
-            <td class="d-flex align-items-center justify-content-center">
-              {{ index + 1 }}
-            </td>
-            <td>{{ formatDate(item.CreatedDate) }}</td>
-            <td style="text-align: center">
-              <div
-                :class="{
-                  'pending-status': item.Status == 0,
-                  'shipping-status': item.Status == 1,
-                  'approved-status': item.Status == 2,
-                  'refuse-status': item.Status == 3,
-                }"
-                class="status-type"
-                style="margin: 0 auto"
-              >
-                {{ formatStatus(item.Status) }}
-              </div>
-            </td>
-            <td>
-              <button
-                class="btn btn-sm btn-primary"
-                @click="onShowPopupOrderDetail(item)"
-              >
-                Xem chi tiết
-              </button>
-            </td>
-            <td>
-              <button
-                :class="[
-                  item.Status == 0? '' : 'disabled',
-                ]"
-                type="button"
-                class="btn btn-outline-danger btn-sm"
-                @click="onShowPopupReason(item)"
-              >
-                <i class="bi bi-trash"></i>
-                Hủy đặt hàng
-              </button>
-            </td>
-          </tr>
-          <tr v-if="isShowNoData">
-            <td></td>
-            <td></td>
-            <td class="order-nodata">Bạn chưa có đơn hàng.</td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <div style="overflow-y: auto; max-height: 600px;">
+        <table class="cart__table" style="padding: 0; margin: 0">
+          <tbody style="padding: 20px;">
+            <tr >
+              <th style="width: 180px; text-align: center">STT đơn hàng</th>
+              <th style="width: 240px; text-align: center">Ngày đặt</th>
+              <th style="width: 380px; text-align: center">Tình trạng</th>
+              <th style="width: 380px; text-align: center">Xem chi tiết</th>
+              <th style="width: 280px"></th>
+            </tr>
+            <tr v-for="(item, index) in dataOrders" :key="index">
+              <td class="d-flex align-items-center justify-content-center">
+                {{ index + 1 }}
+              </td>
+              <td>{{ formatDate(item.CreatedDate) }}</td>
+              <td style="text-align: center">
+                <div
+                  :class="{
+                    'pending-status': item.Status == 0,
+                    'shipping-status': item.Status == 1,
+                    'approved-status': item.Status == 2,
+                    'refuse-status': item.Status == 3,
+                  }"
+                  class="status-type"
+                  style="margin: 0 auto"
+                >
+                  {{ formatStatus(item.Status) }}
+                </div>
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  @click="onShowPopupOrderDetail(item)"
+                >
+                  Xem chi tiết
+                </button>
+              </td>
+              <td>
+                <button
+                  :class="[item.Status == 0 ? '' : 'disabled']"
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  @click="onShowPopupReason(item)"
+                >
+                  <i class="bi bi-trash"></i>
+                  Hủy đặt hàng
+                </button>
+              </td>
+            </tr>
+            <tr v-if="isShowNoData">
+              <td></td>
+              <td></td>
+              <td class="order-nodata">Bạn chưa có đơn hàng.</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <TPopup
       popupTile="Lý do hủy đơn"
